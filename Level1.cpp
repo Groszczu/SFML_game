@@ -50,12 +50,12 @@ namespace rstar
 		if (initial_)
 		{
 			data_->window.draw(background_);
-			FadingAway(FADE_FRAME_TIME, data_->window, background_);
+			FadingAway(SHADOW_FRAME_TIME, data_->window, background_);
 			initial_ = false;
 		}
 		if (fading_)
 		{
-			Fading(FADE_FRAME_TIME, data_->window);
+			Fading(SHADOW_FRAME_TIME, data_->window);
 			fading_ = false;
 		}
 		else

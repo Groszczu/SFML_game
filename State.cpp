@@ -1,5 +1,6 @@
 #include "State.hpp"
 #include "DEFINITIONS.hpp"
+#include <vector>
 
 namespace rstar
 {
@@ -10,9 +11,9 @@ namespace rstar
 		std::vector<sf::Sprite> blacks;
 		texture.loadFromFile(BLACK_SHADOW_FILEPATH);
 
-		blacks.reserve(20);
+		blacks.reserve(FINAL_NUMBER_OF_SHADOWS);
 
-		while (blacks.size() != 20)
+		while (blacks.size() != FINAL_NUMBER_OF_SHADOWS)
 		{
 			if (clock.getElapsedTime().asSeconds() > time)
 			{
@@ -35,8 +36,8 @@ namespace rstar
 		std::vector<sf::Sprite> blacks;
 		texture.loadFromFile(BLACK_SHADOW_FILEPATH);
 
-		blacks.reserve(20);
-		for (auto i = 0; i < 20; i++)
+		blacks.reserve(FINAL_NUMBER_OF_SHADOWS);
+		for (auto i = 0; i < FINAL_NUMBER_OF_SHADOWS; i++)
 		{
 			blacks.emplace_back(sf::Sprite{ texture });
 		}

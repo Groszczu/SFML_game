@@ -3,7 +3,8 @@
 
 constexpr int WINDOW_WIDTH = 852;
 constexpr int WINDOW_HEIGHT = 480;
-constexpr float FADE_FRAME_TIME = 0.05f;
+constexpr int FINAL_NUMBER_OF_SHADOWS = 20;
+constexpr float SHADOW_FRAME_TIME = 0.05f;
 constexpr float BUTTON_ANIMATION_DURATION = 0.7f;
 constexpr float BACKGROUND_ANIMATION_DURATION = 0.5f;
 constexpr float SHOT_DELAY = 1.f;

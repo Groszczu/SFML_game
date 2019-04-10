@@ -37,7 +37,7 @@ namespace rstar
 		{
 			fading_ = true;
 		}
-		if (data_->input.IsMouseOverSprite(startButton_, sf::Mouse::Button::Left, data_->window))
+		if (data_->input.IsMouseOverSprite(startButton_, data_->window))
 		{
 			mouseOverButton_ = true;
 		}
@@ -73,7 +73,7 @@ namespace rstar
 	{
 		if (fading_)
 		{
-			Fading(FADE_FRAME_TIME, data_->window);
+			Fading(SHADOW_FRAME_TIME, data_->window);
 		}
 		else
 		{

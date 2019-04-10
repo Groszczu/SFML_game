@@ -14,7 +14,7 @@ namespace rstar
 		return false;
 	}
 
-	bool InputManager::IsMouseOverSprite(sf::Sprite const& object, sf::Mouse::Button const& button, sf::RenderWindow const& window) const
+	bool InputManager::IsMouseOverSprite(sf::Sprite const& object, sf::RenderWindow const& window) const
 	{
 		sf::IntRect tempRect{ static_cast<sf::IntRect>(object.getGlobalBounds()) };
 
