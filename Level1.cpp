@@ -1,5 +1,6 @@
 #include "Level1.hpp"
 #include "DEFINITIONS.hpp"
+#include "Enemy.hpp"
 #include <thread>
 
 namespace rstar
@@ -9,12 +10,23 @@ namespace rstar
 		data_->assets.LoadTexture("Level Background1",LEVEL_BACKGROUND1_FILEPATH);
 		data_->assets.LoadTexture("Level Background2",LEVEL_BACKGROUND2_FILEPATH);
 		data_->assets.LoadTexture("Level Background3",LEVEL_BACKGROUND3_FILEPATH);
+
 		data_->assets.LoadTexture("Player Ship", PLAYER_SHIP_FILEPATH);
 		data_->assets.LoadTexture("Player Bullet", PLAYER_BULLET_FILEPATH);
+
+		data_->assets.LoadTexture("Red Enemy1", RED_ENEMY1_FILEPATH);
+		data_->assets.LoadTexture("Red Enemy2", RED_ENEMY2_FILEPATH);
+		data_->assets.LoadTexture("Red Enemy3", RED_ENEMY3_FILEPATH);
+
+		data_->assets.LoadTexture("Enemy dst1", ENEMY_DST1_FILEPATH);
+		data_->assets.LoadTexture("Enemy dst2", ENEMY_DST2_FILEPATH);
+		data_->assets.LoadTexture("Enemy dst3", ENEMY_DST3_FILEPATH);
+		data_->assets.LoadTexture("Enemy dst4", ENEMY_DST4_FILEPATH);
 
 		background_.setTexture(data_->assets.GetTexture("Level Background1"));
 		
 		player_ = std::make_unique<PlayerShip>(data_);
+		enemies_ = std::make_unique<Enemies>(data_, 72, sf::Vector2f{ ENEMIES_WIDTH, 100.f });
 		backgroundThread_ = std::thread(&Level1::backgroundAnimation, this);
 	}
 
@@ -43,6 +55,8 @@ namespace rstar
 	void Level1::Update()
 	{
 		player_->Update();
+		enemies_->Update();
+		RemovePlayerBullet(*enemies_, *player_);
 	}
 
 	void Level1::Draw()
@@ -63,6 +77,7 @@ namespace rstar
 			data_->window.clear();
 			data_->window.draw(background_);
 			player_->Draw();
+			enemies_->Draw();
 			data_->window.display();
 		}		
 	}

@@ -1,6 +1,7 @@
 #pragma once
 #include "Game.hpp"
 #include "PlayerShip.hpp"
+#include "Enemy.hpp"
 #include <thread>
 
 namespace rstar
@@ -9,6 +10,11 @@ namespace rstar
 	{
 	public:
 		explicit Level1(GameDataPtr data);
+
+		Level1(Level1 const& other) = delete;
+		Level1(Level1&& l1) = delete;
+		Level1& operator=(Level1 const& other) = delete;
+		Level1& operator=(Level1&& other) = delete;
 		~Level1();
 
 		void HandleInput() override;
@@ -34,6 +40,9 @@ namespace rstar
 
 		// player ship pointer
 		std::unique_ptr<PlayerShip> player_;
+
+		// enemies pointer
+		std::unique_ptr<Enemies> enemies_;
 	};
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.hpp"
+#include "Game.hpp"
 
 namespace rstar
 {
@@ -12,8 +13,7 @@ namespace rstar
 		class Bullet : public GameObject
 		{
 		public:
-			explicit Bullet(GameDataPtr data, sf::Vector2f startPosition);
-			~Bullet();
+			Bullet(GameDataPtr data, sf::Vector2f startPosition, float movementSpeed);
 
 			bool IsOutOfScreen() const;
 

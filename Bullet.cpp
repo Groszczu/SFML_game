@@ -2,26 +2,22 @@
 
 namespace rstar
 {
-	BaseBullet::Bullet::Bullet(GameDataPtr data, sf::Vector2f startPosition) : GameObject(data)
+	BaseBullet::Bullet::Bullet(GameDataPtr data, sf::Vector2f startPosition, float movementSpeed)
+		: GameObject(data), movementSpeed_(movementSpeed)
 	{
 		sprite_.setTexture(data_->assets.GetTexture("Player Bullet"));
 		sprite_.setScale(3.f, 3.f);
 		sprite_.setPosition(startPosition);
 	}
 
-	BaseBullet::Bullet::~Bullet()
-	{
-		data_.reset();
-	}
-
 	bool BaseBullet::Bullet::IsOutOfScreen() const
 	{
-		return GetPosition().y < 0 - GetHeight();
+		return GetPosition().y < 0 - GetBounds().height;
 	}
 
 	void BaseBullet::Bullet::Update()
 	{
-		sprite_.move({ 0.f, -movementSpeed_ });
+		sprite_.move({ 0.f, movementSpeed_ });
 	}
 
 	void BaseBullet::Bullet::Draw() const

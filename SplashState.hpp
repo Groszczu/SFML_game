@@ -8,7 +8,6 @@ namespace rstar
 	{
 	public:
 		SplashState(GameDataPtr data);
-		~SplashState() = default;
 
 		void HandleInput() override;
 		void Update() override;

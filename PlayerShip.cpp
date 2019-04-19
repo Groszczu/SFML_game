@@ -8,18 +8,13 @@ namespace rstar
 	{
 		sprite_.setTexture(data_->assets.GetTexture("Player Ship"));
 		sprite_.setScale(2.f, 2.f);
-		sprite_.setPosition(static_cast<float>(WINDOW_WIDTH) / 2.f - GetWidth() / 2.f, static_cast<float>(WINDOW_HEIGHT) - GetHeight() * 2.f);
-	}
-
-	PlayerShip::~PlayerShip()
-	{
-		data_.reset();
+		sprite_.setPosition(static_cast<float>(WINDOW_WIDTH) / 2.f - GetBounds().width / 2.f, static_cast<float>(WINDOW_HEIGHT) - GetBounds().height * 2.f);
 	}
 
 	void PlayerShip::Shoot()
 	{
 		// putting new Bullet object in the bullets_ vector [as new Bullet unique_ptr]
-		bullets_.emplace_back(std::make_unique<Bullet>(data_, sf::Vector2f{ GetPosition().x + GetWidth() / 2.f, GetPosition().y }));
+		bullets_.emplace_back(std::make_unique<Bullet>(data_, sf::Vector2f{ GetPosition().x + GetBounds().width / 2.f, GetPosition().y }, bulletsSpeed));
 	}
 
 	void PlayerShip::Update()
@@ -33,7 +28,7 @@ namespace rstar
 		}
 
 		// if D is pressed change movement vector.x to positive value
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && GetPosition().x + GetWidth() < WINDOW_WIDTH)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && GetPosition().x + GetBounds().width < WINDOW_WIDTH)
 		{
 			movement.x = movementSpeed_;
 		}

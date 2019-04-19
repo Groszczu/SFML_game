@@ -1,4 +1,8 @@
 #include "InputManager.hpp"
+#include "PlayerShip.hpp"
+#include "Enemy.hpp"
+#include "Bullet.hpp"
+#include <algorithm>
 
 namespace rstar
 {
