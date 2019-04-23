@@ -2,6 +2,8 @@
 #include "DEFINITIONS.hpp"
 #include "Enemy.hpp"
 #include <thread>
+#include "SplashState.hpp"
+#include <iostream>
 
 namespace rstar
 {
@@ -23,11 +25,26 @@ namespace rstar
 		data_->assets.LoadTexture("Enemy dst3", ENEMY_DST3_FILEPATH);
 		data_->assets.LoadTexture("Enemy dst4", ENEMY_DST4_FILEPATH);
 
+		data_->assets.LoadFont("Pixel font", PIXEL_FONT_FILEPATH);
+
 		background_.setTexture(data_->assets.GetTexture("Level Background1"));
+
+		scoreTxt_.setFont(data_->assets.GetFont("Pixel font"));
+		scoreTxt_.setCharacterSize(FONT_SIZE);
+		scoreTxt_.setPosition(0, WINDOW_HEIGHT - FONT_SIZE);
+		scoreTxt_.setString("SCORE: " + std::to_string(playerScore_));
+
+		playerLivesTxt_.setFont(data_->assets.GetFont("Pixel font"));
+		playerLivesTxt_.setCharacterSize(FONT_SIZE);
+		playerLivesTxt_.setPosition(WINDOW_WIDTH - 10*FONT_SIZE, WINDOW_HEIGHT - FONT_SIZE);
+		playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
 		
-		player_ = std::make_unique<PlayerShip>(data_);
-		enemies_ = std::make_unique<Enemies>(data_, 72, sf::Vector2f{ ENEMIES_WIDTH, 100.f });
+		player_ = std::make_unique<PlayerShip>(data_, lvlCompleteTime_);
+		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, lvlCompleteTime_);
+
 		backgroundThread_ = std::thread(&Level1::backgroundAnimation, this);
+
+		lvlCompleteTime_.restart();
 	}
 
 	Level1::~Level1()
@@ -54,9 +71,32 @@ namespace rstar
 
 	void Level1::Update()
 	{
+		if (fading_)
+		{
+			// TODO: display player score (maybe on other state)
+			data_->stateMachine.SetState(std::make_unique<SplashState>(data_), true);
+		}
+
+		HandlePlayerBulletEnemiesIntersection(*enemies_, *player_);
+		HandleEnemiesPlayerIntersection(*enemies_, *player_);
+		HandleEnemiesShooting(*enemies_, *player_);
+
 		player_->Update();
 		enemies_->Update();
-		RemovePlayerBullet(*enemies_, *player_);
+
+		updateScore();
+		updateLives();
+
+		if (player_->GetLives() <= 0)
+		{
+			fading_ = true;
+		}
+
+		if (enemies_->GetEnemiesCount() <= 0)
+		{
+			// TODO: display player score (maybe on other state)
+			fading_ = true;
+		}
 	}
 
 	void Level1::Draw()
@@ -67,27 +107,31 @@ namespace rstar
 			FadingAway(SHADOW_FRAME_TIME, data_->window, background_);
 			initial_ = false;
 		}
-		if (fading_)
+		else if (fading_)
 		{
 			Fading(SHADOW_FRAME_TIME, data_->window);
-			fading_ = false;
 		}
 		else
 		{
 			data_->window.clear();
 			data_->window.draw(background_);
+
 			player_->Draw();
 			enemies_->Draw();
+
+			data_->window.draw(scoreTxt_);
+			data_->window.draw(playerLivesTxt_);
+
 			data_->window.display();
 		}		
 	}
 
 	void Level1::backgroundAnimation()
 	{
-		sf::Clock b_clock;
+		auto localTimeOffset{ 0.f };
 		while (!stopThread_)
 		{
-			if (b_clock.getElapsedTime().asSeconds() > BACKGROUND_ANIMATION_DURATION)
+			if (lvlCompleteTime_.getElapsedTime().asSeconds() - localTimeOffset > BACKGROUND_ANIMATION_DURATION)
 			{
 				switch (backgroundPointer_)
 				{
@@ -107,8 +151,27 @@ namespace rstar
 					backgroundPointer_ = 1;
 					break;
 				}
-				b_clock.restart();
+				localTimeOffset = lvlCompleteTime_.getElapsedTime().asSeconds();
 			}
 		}
 	}
+
+	void Level1::updateScore()
+	{
+		if (player_->GetScore() != playerScore_)
+		{
+			playerScore_ = player_->GetScore();
+			scoreTxt_.setString("SCORE: " + std::to_string(playerScore_));
+		}
+	}
+
+	void Level1::updateLives()
+	{
+		if (player_->GetLives() != playerLives_ && player_->GetLives() >= 0)
+		{
+			playerLives_ = player_->GetLives();
+			playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
+		}
+	}
+
 }

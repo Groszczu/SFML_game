@@ -15,13 +15,11 @@ namespace rstar
 		public:
 			Bullet(GameDataPtr data, sf::Vector2f startPosition, float movementSpeed);
 
-			bool IsOutOfScreen() const;
-
 			void Update() override;
 			void Draw() const override;
 
 		private:
-			float movementSpeed_{ 10.f };
+			float movementSpeed_;
 		};
 	};
 }

@@ -10,11 +10,6 @@ namespace rstar
 		sprite_.setPosition(startPosition);
 	}
 
-	bool BaseBullet::Bullet::IsOutOfScreen() const
-	{
-		return GetPosition().y < 0 - GetBounds().height;
-	}
-
 	void BaseBullet::Bullet::Update()
 	{
 		sprite_.move({ 0.f, movementSpeed_ });

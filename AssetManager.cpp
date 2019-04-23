@@ -21,7 +21,7 @@ namespace rstar
 		sf::Font font;
 		if (font.loadFromFile(filePath))
 		{
-			fonts_.at(fontName) = font;
+			fonts_.emplace(fontName, font);
 		}
 	}
 

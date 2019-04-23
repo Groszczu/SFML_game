@@ -1,6 +1,4 @@
 #include "StateMachine.hpp"
-#include <string>
-#include <iostream>
 #include <algorithm>
 
 

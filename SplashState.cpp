@@ -1,7 +1,6 @@
 #include "SplashState.hpp"
 #include <utility>
 #include "DEFINITIONS.hpp"
-#include <iostream>
 #include "Level1.hpp"
 
 namespace rstar
@@ -52,8 +51,34 @@ namespace rstar
 		if (fading_)
 		{			
 			data_->stateMachine.SetState(std::make_unique<Level1>(data_), true);
-			std::cout << "Go to menu\n";
 		}
+
+		handleButtonAnimation();
+	}
+
+	void SplashState::Draw()
+	{
+		if (initial_)
+		{
+			data_->window.draw(background_);
+			FadingAway(SHADOW_FRAME_TIME, data_->window, background_);
+			initial_ = false;
+		}
+		else if (fading_)
+		{
+			Fading(SHADOW_FRAME_TIME, data_->window);
+		}
+		else
+		{
+			data_->window.clear();
+			data_->window.draw(background_);
+			data_->window.draw(startButton_);
+			data_->window.display();
+		}
+	}
+
+	void SplashState::handleButtonAnimation()
+	{
 		if (mouseOverButton_)
 		{
 			startButton_.setTexture(data_->assets.GetTexture("Start Button Pressed"));
@@ -66,21 +91,6 @@ namespace rstar
 		{
 			startButton_.setTexture(data_->assets.GetTexture("Start Button"));
 			clock_.restart();
-		}
-	}
-
-	void SplashState::Draw()
-	{
-		if (fading_)
-		{
-			Fading(SHADOW_FRAME_TIME, data_->window);
-		}
-		else
-		{
-			data_->window.clear();
-			data_->window.draw(background_);
-			data_->window.draw(startButton_);
-			data_->window.display();
 		}
 	}
 }

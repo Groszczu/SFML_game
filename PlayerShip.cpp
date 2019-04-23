@@ -4,7 +4,8 @@
 
 namespace rstar
 {
-	PlayerShip::PlayerShip(GameDataPtr data) : GameObject(data)
+	PlayerShip::PlayerShip(GameDataPtr data, sf::Clock &clockRef)
+		: GameObject(data), shotClockRef_(clockRef)
 	{
 		sprite_.setTexture(data_->assets.GetTexture("Player Ship"));
 		sprite_.setScale(2.f, 2.f);
@@ -14,49 +15,16 @@ namespace rstar
 	void PlayerShip::Shoot()
 	{
 		// putting new Bullet object in the bullets_ vector [as new Bullet unique_ptr]
-		bullets_.emplace_back(std::make_unique<Bullet>(data_, sf::Vector2f{ GetPosition().x + GetBounds().width / 2.f, GetPosition().y }, bulletsSpeed));
+		bullets_.emplace_back(std::make_unique<Bullet>(data_, sf::Vector2f{ GetPosition().x + GetBounds().width / 2.f, GetPosition().y }, bulletsSpeed_));
 	}
 
 	void PlayerShip::Update()
 	{
-		sf::Vector2f movement{0,0};
-
-		// if A is pressed change movement vector.x to negative value
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && GetPosition().x > 0)
+		if (lives_ != 0)
 		{
-			movement.x = -movementSpeed_;
+			handleMovement();
+			handleShooting();
 		}
-
-		// if D is pressed change movement vector.x to positive value
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && GetPosition().x + GetBounds().width < WINDOW_WIDTH)
-		{
-			movement.x = movementSpeed_;
-		}
-
-		// if space is pressed shoot
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && shotClock.getElapsedTime().asSeconds() > SHOT_DELAY)
-		{
-			Shoot();
-			shotClock.restart();
-		}
-
-		// Updating bullets position
-		for (std::size_t i = 0; i < bullets_.size(); i++)
-		{
-			if (bullets_.at(i)->IsOutOfScreen())
-			{
-				// removing bullets that are out of screen
-				bullets_.erase(bullets_.begin() + i);
-			}
-			else
-			{
-				// if bullet position is valid, move it
-				bullets_.at(i)->Update();
-			}
-		}
-
-		// move player ship
-		sprite_.move(movement);
 	}
 
 	// drawing player ship and its bullets to the screen
@@ -69,4 +37,47 @@ namespace rstar
 		}
 	}
 
+	void PlayerShip::handleMovement()
+	{
+		sf::Vector2f moveDirection{0,0};
+
+		// if A is pressed change movement vector.x to negative value
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && GetPosition().x > 0)
+		{
+			moveDirection.x = -movementSpeed_;
+		}
+
+		// if D is pressed change movement vector.x to positive value
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && GetPosition().x + GetBounds().width < WINDOW_WIDTH)
+		{
+			moveDirection.x = movementSpeed_;
+		}
+
+		// move player ship
+		sprite_.move(moveDirection);
+	}
+
+	void PlayerShip::handleShooting()
+	{
+		// if space is pressed shoot
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) 
+			&& shotClockRef_.getElapsedTime().asSeconds() - shotDelayTimeOffset_ > SHOT_DELAY)
+		{
+			Shoot();
+			shotDelayTimeOffset_ = shotClockRef_.getElapsedTime().asSeconds();
+		}
+
+		// Updating bullets position
+		bullets_.erase(std::remove_if(begin(bullets_), end(bullets_),
+			[](auto &bullet)
+		{
+				return bullet->IsOutOfScreen();
+		}
+		), end(bullets_));
+
+		for (auto &bullet : bullets_)
+		{
+			bullet->Update();
+		}
+	}
 }

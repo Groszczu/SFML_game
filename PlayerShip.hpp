@@ -3,6 +3,7 @@
 #include <memory>
 #include "GameObject.hpp"
 #include "Bullet.hpp"
+#include "DEFINITIONS.hpp"
 
 namespace rstar
 {
@@ -10,21 +11,31 @@ namespace rstar
 	class PlayerShip final : public GameObject, public BaseBullet
 	{
 	public:
-		explicit PlayerShip(GameDataPtr data);
+		PlayerShip(GameDataPtr data, sf::Clock &clockRef);
 
 		void Shoot();
-		std::vector<std::unique_ptr<Bullet>>* GetBulletsPtr() { return &bullets_; }
+		int GetScore() const { return score_; }
+		int GetLives() const { return lives_; }
 
 		void Update() override;
 		void Draw() const override;
 
-		friend void RemovePlayerBullet(Enemies &enemies, PlayerShip &playerShip);
+		friend void HandlePlayerBulletEnemiesIntersection(Enemies &e, PlayerShip &ship);
+		friend void HandleEnemiesPlayerIntersection(Enemies &e, PlayerShip &ship);
 		
 	private:
-		float movementSpeed_{ 2.5f };
-		float bulletsSpeed{ -10.f }; // minus due to destination of bullets
+		float movementSpeed_{ PLAYER_START_SPEED };
+		float bulletsSpeed_{ PLAYER_START_BULLET_SPEED };
+
 		std::vector<std::unique_ptr<Bullet>> bullets_;
 
-		sf::Clock shotClock;
+		int lives_{ 3 };
+		int score_{ 0 };
+
+		sf::Clock &shotClockRef_;
+		float shotDelayTimeOffset_{ 0 };
+
+		void handleMovement();
+		void handleShooting();
 	};
 }

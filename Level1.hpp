@@ -24,7 +24,14 @@ namespace rstar
 	private:
 		GameDataPtr data_;
 		sf::Sprite background_;
-		sf::Clock clock_;
+
+		int playerScore_{ 0 };
+		sf::Text scoreTxt_;
+
+		int playerLives_{ LVL1_PLAYER_LIVES };
+		sf::Text playerLivesTxt_;
+
+		sf::Clock lvlCompleteTime_;
 
 		// bool variables to manage changing screens
 		bool initial_{ true };
@@ -43,6 +50,9 @@ namespace rstar
 
 		// enemies pointer
 		std::unique_ptr<Enemies> enemies_;
+
+		void updateScore();
+		void updateLives();
 	};
 }
 
