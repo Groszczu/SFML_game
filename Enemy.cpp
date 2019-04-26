@@ -187,8 +187,6 @@ namespace rstar
 
 	void Enemies::Draw() const
 	{		
-		
-		
 		std::for_each(begin(enemies_), end(enemies_), 
 			[](auto const& enemy)
 		{
@@ -277,9 +275,10 @@ namespace rstar
 		std::for_each(begin(e.enemies_), end(e.enemies_),
 			[&e, &ship](auto &enemy)
 		{
-			if (enemy->GetPosition().x + ENEMIES_WIDTH > ship.GetPosition().x
-				&& enemy->GetPosition().x - ENEMIES_WIDTH < ship.GetPosition().x
-				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY)
+			if (e.lvlClockRef_.getElapsedTime().asSeconds() > LVL1_ENEMIES_START_SHOOT_DELAY
+				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
+				&& enemy->GetPosition().x + ENEMIES_WIDTH > ship.GetPosition().x 
+				&& enemy->GetPosition().x - ENEMIES_WIDTH < ship.GetPosition().x)
 			{
 				if (Random<float>(0, 100) < LVL1_ENEMIES_CHANCE_TO_SHOOT)
 				{
