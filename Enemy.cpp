@@ -2,20 +2,20 @@
 #include "GameObject.hpp"
 #include "Enemy.hpp"
 #include <algorithm>
-#include <iostream>
 
 namespace rstar
 {
-	Direction Enemies::EnemiesMoveDirection = right;
-	float Enemies::EnemiesMovementSpeed = ENEMIES_START_MOVEMENT_SPEED;
+	Direction Enemies::MoveDirection = right;
+	float Enemies::MovementSpeed = ENEMIES_START_MOVEMENT_SPEED;
 	bool Enemies::MoveForward = false;
-	float Enemies::EnemiesBulletsSpeed = LVL1_ENEMIES_BULLETS_SPEED;
+	float Enemies::BulletsSpeed = LVL1_ENEMIES_BULLETS_SPEED;
+	float Enemies::ChargingSpeed = LVL1_ENEMIES_CHARGING_SPEED;
 
 	// Start enemy---------------------------------------------------------------------------
 	Enemy::Enemy(GameDataPtr data, sf::Vector2f startPosition, sf::Clock &clock)
 		: GameObject(data), clockRef_(clock)
 	{
-		sprite_.setTexture(data_->assets.GetTexture("Red Enemy1"));
+		SetTexture(data_->assets.GetTexture("Red Enemy1"));
 		sprite_.setScale(2.f, 2.f);
 		sprite_.setRotation(180);
 		sprite_.setPosition(startPosition);
@@ -27,16 +27,16 @@ namespace rstar
 		{
 			switch (currentTexture_)
 			{
-			case 1: sprite_.setTexture(data_->assets.GetTexture("Red Enemy2"));
+			case 1: SetTexture(data_->assets.GetTexture("Red Enemy2"));
 				++currentTexture_;
 				break;
-			case 2: sprite_.setTexture(data_->assets.GetTexture("Red Enemy3"));
+			case 2: SetTexture(data_->assets.GetTexture("Red Enemy3"));
 				++currentTexture_;
 				break;
-			case 3: sprite_.setTexture(data_->assets.GetTexture("Red Enemy2"));
+			case 3: SetTexture(data_->assets.GetTexture("Red Enemy2"));
 				++currentTexture_;
 				break;
-			case 4: sprite_.setTexture(data_->assets.GetTexture("Red Enemy1"));
+			case 4: SetTexture(data_->assets.GetTexture("Red Enemy1"));
 				currentTexture_ = 1;
 				break;
 			default:
@@ -52,16 +52,16 @@ namespace rstar
 		{
 			switch (currentDestroyTexture_)
 			{
-			case 0: sprite_.setTexture(data_->assets.GetTexture("Enemy dst1"));
+			case 0: SetTexture(data_->assets.GetTexture("Enemy dst1"));
 				++currentDestroyTexture_;
 				break;
-			case 1: sprite_.setTexture(data_->assets.GetTexture("Enemy dst2"));
+			case 1: SetTexture(data_->assets.GetTexture("Enemy dst2"));
 				++currentDestroyTexture_;
 				break;
-			case 2: sprite_.setTexture(data_->assets.GetTexture("Enemy dst3"));
+			case 2: SetTexture(data_->assets.GetTexture("Enemy dst3"));
 				++currentDestroyTexture_;
 				break;
-			case 3: sprite_.setTexture(data_->assets.GetTexture("Enemy dst4"));
+			case 3: SetTexture(data_->assets.GetTexture("Enemy dst4"));
 				++currentDestroyTexture_;
 				break;
 			case 4:
@@ -76,23 +76,25 @@ namespace rstar
 
 	void Enemy::handleMovement()
 	{
-		if (IsOutOfScreen())
+		sf::Vector2f moveDirection;
+		if (!isCharging_)
 		{
-			toRemove_ = true;
-			return;
-		}
+			if (GetPosition().x > WINDOW_WIDTH)
+			{
+				Enemies::MoveDirection = left;
+			}
+			if (GetPosition().x - ENEMIES_WIDTH < 0)
+			{
+				Enemies::MoveDirection = right;
+			}
 
-		if (GetPosition().x > WINDOW_WIDTH)
+			moveDirection = { Enemies::MoveDirection * Enemies::MovementSpeed, Enemies::MoveForward * Enemies::MovementSpeed };
+
+		}
+		else
 		{
-			Enemies::EnemiesMoveDirection = left;
+			moveDirection = { Enemies::MoveDirection * Enemies::MovementSpeed, Enemies::ChargingSpeed };
 		}
-		if (GetPosition().x - ENEMIES_WIDTH < 0)
-		{
-			Enemies::EnemiesMoveDirection = right;
-		}
-
-		sf::Vector2f const moveDirection{Enemies::EnemiesMoveDirection * Enemies::EnemiesMovementSpeed, Enemies::MoveForward * Enemies::EnemiesMovementSpeed };
-
 		sprite_.move(moveDirection);
 	}
 
@@ -140,8 +142,8 @@ namespace rstar
 		}
 		);
 
-		EnemiesMoveDirection = right;
-		EnemiesMovementSpeed = ENEMIES_START_MOVEMENT_SPEED;
+		MoveDirection = right;
+		MovementSpeed = ENEMIES_START_MOVEMENT_SPEED;
 		MoveForward = false;
 	}
 
@@ -165,6 +167,7 @@ namespace rstar
 		{
 			MoveForward = true;
 			moveForwardTimeOffset_ = lvlClockRef_.getElapsedTime().asSeconds();
+			handleCharging(LVL1_ENEMIES_CHARGING_AT_ONCE);
 		}
 		if (MoveForward && lvlClockRef_.getElapsedTime().asSeconds() - moveForwardTimeOffset_ > LVL1_ENEMIES_MOVE_FORWARD_DURATION)
 		{
@@ -188,9 +191,19 @@ namespace rstar
 	void Enemies::Draw() const
 	{		
 		std::for_each(begin(enemies_), end(enemies_), 
-			[](auto const& enemy)
+		[](auto const& enemy)
 		{
-			if(!enemy->IsDestroyed())
+			if(!enemy->IsDestroyed() && !enemy->IsCharging())
+			{
+				enemy->Draw();
+			}
+		}
+		);
+		
+		std::for_each(begin(enemies_), end(enemies_), 
+		[](auto const& enemy)
+		{
+			if(enemy->IsCharging())
 			{
 				enemy->Draw();
 			}
@@ -198,7 +211,7 @@ namespace rstar
 		);
 
 		std::for_each(begin(bullets_), end(bullets_),
-			[](auto const& bullet)
+		[](auto const& bullet)
 		{
 			bullet->Draw();
 		}
@@ -206,7 +219,7 @@ namespace rstar
 
 		// draw destroyed enemies later to appear on top of other enemies
 		std::for_each(begin(enemies_), end(enemies_), 
-			[](auto const& enemy)
+		[](auto const& enemy)
 		{
 			if(enemy->IsDestroyed())
 			{
@@ -219,12 +232,22 @@ namespace rstar
 	void Enemies::Shoot(sf::Vector2f const& startPosition)
 	{
 		// putting new Bullet object in the bullets_ vector [as new Bullet unique_ptr]
-		bullets_.emplace_back(std::make_unique<Bullet>(data_, startPosition, EnemiesBulletsSpeed));
+		bullets_.emplace_back(std::make_unique<Bullet>(data_, startPosition, BulletsSpeed));
 	}
+
+	void Enemies::handleCharging(unsigned int enemiesCharging)
+	{
+		for (unsigned int i = 0; i < enemiesCharging; i++)
+		{
+			auto const chargingEnemyIndex = Random<int>(0, GetEnemiesCount() - 1);
+			enemies_.at(chargingEnemyIndex)->Charge();
+		}
+	}
+
 	// End enemies---------------------------------------------------------------------
 
 	// Free functions------------------------------------------------------------------
-	void HandlePlayerBulletEnemiesIntersection(Enemies &e, PlayerShip &ship)
+	void HandleBulletsIntersection(Enemies &e, PlayerShip &ship)
 	{
 		for (auto &enemy : e.enemies_)
 		{
@@ -235,6 +258,7 @@ namespace rstar
 				if (intersect)
 				{
 					enemy->isDestroyed_ = true;
+					enemy->isCharging_ = false;
 					ship.score_ += LVL1_POINTS_FOR_ENEMY;
 				}
 
@@ -256,7 +280,7 @@ namespace rstar
 			), end(e.bullets_));
 		}
 	}
-	void HandleEnemiesPlayerIntersection(Enemies &e, PlayerShip &ship)
+	void HandleIntersection(Enemies &e, PlayerShip &ship)
 	{
 		std::for_each(begin(e.enemies_), end(e.enemies_),
 		[&](auto &enemy)
@@ -264,7 +288,14 @@ namespace rstar
 			if (!enemy->IsDestroyed() && enemy->GetBounds().intersects(ship.GetBounds()))
 			{
 				enemy->isDestroyed_ = true;
+				enemy->isCharging_ = false;
 				--ship.lives_;
+			}
+
+			if (enemy->IsOutOfScreen())
+			{
+				enemy->toRemove_ = true;
+				ship.score_ -= LVL1_POINTS_FOR_ENEMY;
 			}
 		}
 		);
@@ -273,9 +304,10 @@ namespace rstar
 	void HandleEnemiesShooting(Enemies &e, PlayerShip &ship)
 	{
 		std::for_each(begin(e.enemies_), end(e.enemies_),
-			[&e, &ship](auto &enemy)
+		[&e, &ship](auto &enemy)
 		{
-			if (e.lvlClockRef_.getElapsedTime().asSeconds() > LVL1_ENEMIES_START_SHOOT_DELAY
+			if (!enemy->IsCharging()
+				&& e.lvlClockRef_.getElapsedTime().asSeconds() > LVL1_ENEMIES_START_SHOOT_DELAY
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
 				&& enemy->GetPosition().x + ENEMIES_WIDTH > ship.GetPosition().x 
 				&& enemy->GetPosition().x - ENEMIES_WIDTH < ship.GetPosition().x)

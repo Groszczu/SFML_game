@@ -13,9 +13,9 @@ namespace rstar
 	{
 	public:
 		StateMachine() = default;
-		~StateMachine() = default;
 
 		void SetState(StatePtr newState, bool isReplacing = true);
+		void RemoveActiveState();
 		void UpdatingStatesStack();
 
 		StatePtr& GetActiveState();
@@ -25,6 +25,7 @@ namespace rstar
 		StatePtr newState_;
 		bool replacing_{ false };
 		bool adding_{ false };
+		bool removing_{ false };
 	};
 }
 

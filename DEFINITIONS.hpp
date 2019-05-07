@@ -11,11 +11,14 @@ constexpr int FONT_SIZE = 12;
 constexpr int LVL1_ENEMIES_COUNT = 60;
 constexpr int LVL1_POINTS_FOR_ENEMY = 100;
 constexpr int LVL1_PLAYER_LIVES = 3;
+constexpr int LVL1_ENEMIES_CHARGING_AT_ONCE = 3;
 constexpr float LVL1_ENEMIES_MOVE_FORWARD_TIME = 10.f;
 constexpr float LVL1_ENEMIES_MOVE_FORWARD_DURATION = 0.8f;
 constexpr float LVL1_ENEMIES_BULLETS_SPEED = 3.f;
 constexpr float LVL1_ENEMIES_CHANCE_TO_SHOOT = 50.f;
 constexpr float LVL1_ENEMIES_START_SHOOT_DELAY = 5.f;
+constexpr float LVL1_POINTS = 3600.f;
+constexpr float LVL1_ENEMIES_CHARGING_SPEED = 2.f;
 
 constexpr float SHADOW_FRAME_TIME = 0.05f;
 constexpr float BUTTON_ANIMATION_DURATION = 0.7f;

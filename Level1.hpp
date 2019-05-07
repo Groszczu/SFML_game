@@ -31,7 +31,8 @@ namespace rstar
 		int playerLives_{ LVL1_PLAYER_LIVES };
 		sf::Text playerLivesTxt_;
 
-		sf::Clock lvlCompleteTime_;
+		sf::Clock lvlClock_;
+		float lvlCompleteTime_{ 0.f };
 
 		// bool variables to manage changing screens
 		bool initial_{ true };

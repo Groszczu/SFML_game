@@ -20,8 +20,8 @@ namespace rstar
 		void Update() override;
 		void Draw() const override;
 
-		friend void HandlePlayerBulletEnemiesIntersection(Enemies &e, PlayerShip &ship);
-		friend void HandleEnemiesPlayerIntersection(Enemies &e, PlayerShip &ship);
+		friend void HandleBulletsIntersection(Enemies &e, PlayerShip &ship);
+		friend void HandleIntersection(Enemies &e, PlayerShip &ship);
 		
 	private:
 		float movementSpeed_{ PLAYER_START_SPEED };

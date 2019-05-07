@@ -3,7 +3,6 @@
 #include "Enemy.hpp"
 #include <thread>
 #include "SplashState.hpp"
-#include <iostream>
 
 namespace rstar
 {
@@ -39,12 +38,12 @@ namespace rstar
 		playerLivesTxt_.setPosition(WINDOW_WIDTH - 10*FONT_SIZE, WINDOW_HEIGHT - FONT_SIZE);
 		playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
 		
-		player_ = std::make_unique<PlayerShip>(data_, lvlCompleteTime_);
-		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, lvlCompleteTime_);
+		player_ = std::make_unique<PlayerShip>(data_, lvlClock_);
+		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, lvlClock_);
 
 		backgroundThread_ = std::thread(&Level1::backgroundAnimation, this);
 
-		lvlCompleteTime_.restart();
+		lvlClock_.restart();
 	}
 
 	Level1::~Level1()
@@ -74,11 +73,12 @@ namespace rstar
 		if (fading_)
 		{
 			// TODO: display player score (maybe on other state)
+			updateScore();
 			data_->stateMachine.SetState(std::make_unique<SplashState>(data_), true);
 		}
 
-		HandlePlayerBulletEnemiesIntersection(*enemies_, *player_);
-		HandleEnemiesPlayerIntersection(*enemies_, *player_);
+		HandleBulletsIntersection(*enemies_, *player_);
+		HandleIntersection(*enemies_, *player_);
 		HandleEnemiesShooting(*enemies_, *player_);
 
 		player_->Update();
@@ -89,12 +89,15 @@ namespace rstar
 
 		if (player_->GetLives() <= 0)
 		{
+			// no points for losing lvl
+			lvlCompleteTime_ = -1.f;
 			fading_ = true;
 		}
 
 		if (enemies_->GetEnemiesCount() <= 0)
 		{
 			// TODO: display player score (maybe on other state)
+			lvlCompleteTime_ = lvlClock_.getElapsedTime().asSeconds();
 			fading_ = true;
 		}
 	}
@@ -131,7 +134,7 @@ namespace rstar
 		auto localTimeOffset{ 0.f };
 		while (!stopThread_)
 		{
-			if (lvlCompleteTime_.getElapsedTime().asSeconds() - localTimeOffset > BACKGROUND_ANIMATION_DURATION)
+			if (lvlClock_.getElapsedTime().asSeconds() - localTimeOffset > BACKGROUND_ANIMATION_DURATION)
 			{
 				switch (backgroundPointer_)
 				{
@@ -151,14 +154,18 @@ namespace rstar
 					backgroundPointer_ = 1;
 					break;
 				}
-				localTimeOffset = lvlCompleteTime_.getElapsedTime().asSeconds();
+				localTimeOffset = lvlClock_.getElapsedTime().asSeconds();
 			}
 		}
 	}
 
 	void Level1::updateScore()
 	{
-		if (player_->GetScore() != playerScore_)
+		if (fading_ && lvlCompleteTime_ > 0)
+		{
+			playerScore_ += static_cast<int>(LVL1_POINTS / lvlCompleteTime_);
+		}
+		else if (player_->GetScore() != playerScore_)
 		{
 			playerScore_ = player_->GetScore();
 			scoreTxt_.setString("SCORE: " + std::to_string(playerScore_));

@@ -14,8 +14,23 @@ namespace rstar
 		adding_ = true;
 	}
 
+	void StateMachine::RemoveActiveState()
+	{
+		if (!states_.empty())
+		{
+			removing_ =  true;
+		}
+	}
+
+
 	void StateMachine::UpdatingStatesStack()
 	{
+		if (removing_)
+		{
+			states_.pop();
+			removing_ = false;
+		}
+		
 		if (adding_)
 		{
 			if (replacing_)

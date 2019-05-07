@@ -32,7 +32,8 @@ namespace rstar
 			}
 		}
 
-		if (data_->input.IsSpriteClicked(startButton_, sf::Mouse::Button::Left, data_->window))
+		if (data_->input.IsSpriteClicked(startButton_, sf::Mouse::Button::Left, data_->window) 
+			|| sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
 			fading_ = true;
 		}
@@ -67,6 +68,8 @@ namespace rstar
 		else if (fading_)
 		{
 			Fading(SHADOW_FRAME_TIME, data_->window);
+			fading_ = false;
+			initial_ = true;
 		}
 		else
 		{

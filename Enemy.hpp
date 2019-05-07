@@ -19,19 +19,22 @@ namespace rstar
 
 		bool IsDestroyed() const { return isDestroyed_; }
 		bool IsToRemove() const { return toRemove_; }
+		bool IsCharging() const { return isCharging_; }
 		bool IsTouchingGameObj(GameObject &other) const;
+		void Charge() { isCharging_ = true; }
 
 
 		void Update() override;
 		void Draw() const override;
 
-		friend void HandlePlayerBulletEnemiesIntersection(Enemies &e, PlayerShip &ship);
-		friend void HandleEnemiesPlayerIntersection(Enemies &e, PlayerShip & ship);
+		friend void HandleBulletsIntersection(Enemies &e, PlayerShip &ship);
+		friend void HandleIntersection(Enemies &e, PlayerShip & ship);
 		friend void HandleEnemiesShooting(Enemies &e, PlayerShip &ship);
 
 	private:
 		bool isDestroyed_{ false };
 		bool toRemove_{ false };
+		bool isCharging_{ false };
 
 
 		// variable to 'watch' enemies clock
@@ -59,13 +62,14 @@ namespace rstar
 		void Update();
 		void Draw() const;
 
-		static Direction EnemiesMoveDirection;
-		static float EnemiesMovementSpeed;
+		static Direction MoveDirection;
+		static float MovementSpeed;
 		static bool MoveForward;
-		static float EnemiesBulletsSpeed;
+		static float BulletsSpeed;
+		static float ChargingSpeed;
 
-		friend void HandlePlayerBulletEnemiesIntersection(Enemies &e, PlayerShip &ship);
-		friend void HandleEnemiesPlayerIntersection(Enemies &e, PlayerShip & ship);
+		friend void HandleBulletsIntersection(Enemies &e, PlayerShip &ship);
+		friend void HandleIntersection(Enemies &e, PlayerShip & ship);
 		friend void HandleEnemiesShooting(Enemies &e, PlayerShip &ship);
 
 	private:
@@ -80,13 +84,13 @@ namespace rstar
 		GameDataPtr data_;
 
 		void removeDestroyedEnemies();
-		void handleShooting();
+		void handleCharging(unsigned int enemiesCharging);
 	};
 
 	// friend free function to handle interactions between PlayerShip and Enemies
-	void HandlePlayerBulletEnemiesIntersection(Enemies &e, PlayerShip &ship);
+	void HandleBulletsIntersection(Enemies &e, PlayerShip &ship);
 
-	void HandleEnemiesPlayerIntersection(Enemies &e, PlayerShip &ship);
+	void HandleIntersection(Enemies &e, PlayerShip &ship);
 
 	void HandleEnemiesShooting(Enemies &e, PlayerShip &ship);
 }
