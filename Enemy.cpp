@@ -2,6 +2,7 @@
 #include "GameObject.hpp"
 #include "Enemy.hpp"
 #include <algorithm>
+#include <utility>
 
 namespace rstar
 {
@@ -119,7 +120,7 @@ namespace rstar
 	void Enemy::Draw() const
 	{
 		data_->window.draw(sprite_);
-		
+
 	}
 	// End enemy---------------------------------------------------------------------------
 
@@ -129,18 +130,18 @@ namespace rstar
 	{
 		std::generate_n(std::back_inserter(enemies_), enemiesCount,
 			[&]
-		{
-			if (firstEnemyPos.x + ENEMIES_WIDTH >= WINDOW_WIDTH - ENEMIES_SIDE_MARGIN)
 			{
-				firstEnemyPos.x = ENEMIES_SIDE_MARGIN;
-				firstEnemyPos.y += ENEMIES_HEIGHT + SPACE_BETWEEN_ENEMIES;
+				if (firstEnemyPos.x + ENEMIES_WIDTH >= WINDOW_WIDTH - ENEMIES_SIDE_MARGIN)
+				{
+					firstEnemyPos.x = ENEMIES_SIDE_MARGIN;
+					firstEnemyPos.y += ENEMIES_HEIGHT + SPACE_BETWEEN_ENEMIES;
+				}
+
+				firstEnemyPos.x += ENEMIES_WIDTH + SPACE_BETWEEN_ENEMIES;
+
+				return std::make_unique<Enemy>(data_, firstEnemyPos, lvlClockRef_);
 			}
-
-			firstEnemyPos.x += ENEMIES_WIDTH + SPACE_BETWEEN_ENEMIES;
-
-			return std::make_unique<Enemy>(data_, firstEnemyPos, lvlClockRef_);
-		}
-		);
+			);
 
 		MoveDirection = right;
 		MovementSpeed = ENEMIES_START_MOVEMENT_SPEED;
@@ -151,14 +152,14 @@ namespace rstar
 	{
 		enemies_.erase(std::remove_if(begin(enemies_), end(enemies_),
 			[&](std::unique_ptr<Enemy> &enemy)
-		{
-			if (enemy->IsToRemove())
 			{
-				--enemiesCount_;
-			}
+				if (enemy->IsToRemove())
+				{
+					--enemiesCount_;
+				}
 
-			return enemy->IsToRemove();
-		}), end(enemies_));
+				return enemy->IsToRemove();
+			}), end(enemies_));
 	}
 
 	void Enemies::Update()
@@ -174,7 +175,7 @@ namespace rstar
 			MoveForward = false;
 			moveForwardTimeOffset_ = lvlClockRef_.getElapsedTime().asSeconds();
 		}
-		
+
 		for (auto &enemy : enemies_)
 		{
 			enemy->Update();
@@ -186,49 +187,22 @@ namespace rstar
 		}
 
 		removeDestroyedEnemies();
+		reorderEnemies();
 	}
 
 	void Enemies::Draw() const
-	{		
-		std::for_each(begin(enemies_), end(enemies_), 
-		[](auto const& enemy)
+	{
+		for (auto const& enemy : enemies_)
 		{
-			if(!enemy->IsDestroyed() && !enemy->IsCharging())
-			{
-				enemy->Draw();
-			}
+			enemy->Draw();
 		}
-		);
-		
-		std::for_each(begin(enemies_), end(enemies_), 
-		[](auto const& enemy)
-		{
-			if(enemy->IsCharging())
-			{
-				enemy->Draw();
-			}
-		}
-		);
 
-		std::for_each(begin(bullets_), end(bullets_),
-		[](auto const& bullet)
+		for (auto const& bullet : bullets_)
 		{
 			bullet->Draw();
 		}
-		);
-
-		// draw destroyed enemies later to appear on top of other enemies
-		std::for_each(begin(enemies_), end(enemies_), 
-		[](auto const& enemy)
-		{
-			if(enemy->IsDestroyed())
-			{
-				enemy->Draw();
-			}
-		}
-		);
 	}
-	
+
 	void Enemies::Shoot(sf::Vector2f const& startPosition)
 	{
 		// putting new Bullet object in the bullets_ vector [as new Bullet unique_ptr]
@@ -244,6 +218,24 @@ namespace rstar
 		}
 	}
 
+	// reorder enemies to draw them in correct order`
+	void Enemies::reorderEnemies()
+	{
+		std::partition(begin(enemies_), end(enemies_),
+			[](auto const& enemy)
+			{
+				return enemy->IsCharging();
+			}
+		);
+
+		std::stable_partition(begin(enemies_), end(enemies_),
+			[](auto const& enemy)
+			{
+				return !enemy->IsDestroyed() && !enemy->IsCharging();
+			}
+		);
+	}
+
 	// End enemies---------------------------------------------------------------------
 
 	// Free functions------------------------------------------------------------------
@@ -253,72 +245,72 @@ namespace rstar
 		{
 			ship.bullets_.erase(std::remove_if(begin(ship.bullets_), end(ship.bullets_),
 				[&](auto &bullet)
-			{
-				auto intersect = bullet->GetBounds().intersects(enemy->GetBounds());
-				if (intersect)
 				{
-					enemy->isDestroyed_ = true;
-					enemy->isCharging_ = false;
-					ship.score_ += LVL1_POINTS_FOR_ENEMY;
-				}
+					auto intersect = bullet->GetBounds().intersects(enemy->GetBounds());
+					if (intersect)
+					{
+						enemy->isDestroyed_ = true;
+						enemy->isCharging_ = false;
+						ship.score_ += LVL1_POINTS_FOR_ENEMY;
+					}
 
-				return intersect;
-			}
+					return intersect;
+				}
 			), end(ship.bullets_));
 
 			e.bullets_.erase(std::remove_if(begin(e.bullets_), end(e.bullets_),
 				[&](auto &bullet)
-			{
-				auto intersect = bullet->GetBounds().intersects(ship.GetBounds());
-				if (intersect)
 				{
-					--ship.lives_;
-				}
+					auto intersect = bullet->GetBounds().intersects(ship.GetBounds());
+					if (intersect)
+					{
+						--ship.lives_;
+					}
 
-				return intersect;
-			}
+					return intersect;
+				}
 			), end(e.bullets_));
 		}
 	}
 	void HandleIntersection(Enemies &e, PlayerShip &ship)
 	{
 		std::for_each(begin(e.enemies_), end(e.enemies_),
-		[&](auto &enemy)
-		{
-			if (!enemy->IsDestroyed() && enemy->GetBounds().intersects(ship.GetBounds()))
+			[&](auto &enemy)
 			{
-				enemy->isDestroyed_ = true;
-				enemy->isCharging_ = false;
-				--ship.lives_;
-			}
+				if (!enemy->IsDestroyed() && enemy->GetBounds().intersects(ship.GetBounds()))
+				{
+					enemy->isDestroyed_ = true;
+					enemy->isCharging_ = false;
+					--ship.lives_;
+				}
 
-			if (enemy->IsOutOfScreen())
-			{
-				enemy->toRemove_ = true;
-				ship.score_ -= LVL1_POINTS_FOR_ENEMY;
+				if (enemy->IsOutOfScreen())
+				{
+					enemy->toRemove_ = true;
+					ship.score_ -= LVL1_POINTS_FOR_ENEMY;
+				}
 			}
-		}
 		);
 	}
 
 	void HandleEnemiesShooting(Enemies &e, PlayerShip &ship)
 	{
 		std::for_each(begin(e.enemies_), end(e.enemies_),
-		[&e, &ship](auto &enemy)
-		{
-			if (!enemy->IsCharging()
-				&& e.lvlClockRef_.getElapsedTime().asSeconds() > LVL1_ENEMIES_START_SHOOT_DELAY
-				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
-				&& enemy->GetPosition().x + ENEMIES_WIDTH > ship.GetPosition().x 
-				&& enemy->GetPosition().x - ENEMIES_WIDTH < ship.GetPosition().x)
+			[&e, &ship](auto &enemy)
 			{
-				if (Random<float>(0, 100) < LVL1_ENEMIES_CHANCE_TO_SHOOT)
+				if (!enemy->IsCharging()
+					&& e.lvlClockRef_.getElapsedTime().asSeconds() > LVL1_ENEMIES_START_SHOOT_DELAY
+					&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
+					&& enemy->GetPosition().x + ENEMIES_WIDTH > ship.GetPosition().x
+					&& enemy->GetPosition().x - ENEMIES_WIDTH < ship.GetPosition().x)
 				{
-					e.Shoot(sf::Vector2f{enemy->GetPosition().x - enemy->GetBounds().width/2.f, enemy->GetPosition().y});
-					e.shotDelayTimeOffset_ = e.lvlClockRef_.getElapsedTime().asSeconds();
+					if (Random<float>(0, 100) < LVL1_ENEMIES_CHANCE_TO_SHOOT)
+					{
+						e.Shoot(sf::Vector2f{ enemy->GetPosition().x - enemy->GetBounds().width / 2.f, enemy->GetPosition().y });
+						e.shotDelayTimeOffset_ = e.lvlClockRef_.getElapsedTime().asSeconds();
+					}
 				}
 			}
-		}
 		);
 	}
 }

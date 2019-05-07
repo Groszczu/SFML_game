@@ -85,6 +85,7 @@ namespace rstar
 
 		void removeDestroyedEnemies();
 		void handleCharging(unsigned int enemiesCharging);
+		void reorderEnemies();
 	};
 
 	// friend free function to handle interactions between PlayerShip and Enemies
@@ -94,3 +95,4 @@ namespace rstar
 
 	void HandleEnemiesShooting(Enemies &e, PlayerShip &ship);
 }
+

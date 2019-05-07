@@ -6,11 +6,11 @@
 
 namespace rstar
 {
-	Level1::Level1(GameDataPtr data) : data_{ std::move(data) } 
-	{	
-		data_->assets.LoadTexture("Level Background1",LEVEL_BACKGROUND1_FILEPATH);
-		data_->assets.LoadTexture("Level Background2",LEVEL_BACKGROUND2_FILEPATH);
-		data_->assets.LoadTexture("Level Background3",LEVEL_BACKGROUND3_FILEPATH);
+	Level1::Level1(GameDataPtr data) : data_{ std::move(data) }
+	{
+		data_->assets.LoadTexture("Level Background1", LEVEL_BACKGROUND1_FILEPATH);
+		data_->assets.LoadTexture("Level Background2", LEVEL_BACKGROUND2_FILEPATH);
+		data_->assets.LoadTexture("Level Background3", LEVEL_BACKGROUND3_FILEPATH);
 
 		data_->assets.LoadTexture("Player Ship", PLAYER_SHIP_FILEPATH);
 		data_->assets.LoadTexture("Player Bullet", PLAYER_BULLET_FILEPATH);
@@ -35,9 +35,9 @@ namespace rstar
 
 		playerLivesTxt_.setFont(data_->assets.GetFont("Pixel font"));
 		playerLivesTxt_.setCharacterSize(FONT_SIZE);
-		playerLivesTxt_.setPosition(WINDOW_WIDTH - 10*FONT_SIZE, WINDOW_HEIGHT - FONT_SIZE);
+		playerLivesTxt_.setPosition(WINDOW_WIDTH - 10 * FONT_SIZE, WINDOW_HEIGHT - FONT_SIZE);
 		playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
-		
+
 		player_ = std::make_unique<PlayerShip>(data_, lvlClock_);
 		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, lvlClock_);
 
@@ -126,7 +126,7 @@ namespace rstar
 			data_->window.draw(playerLivesTxt_);
 
 			data_->window.display();
-		}		
+		}
 	}
 
 	void Level1::backgroundAnimation()
@@ -180,5 +180,4 @@ namespace rstar
 			playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
 		}
 	}
-
 }
