@@ -47,36 +47,36 @@ namespace rstar
 
 	void InteractionsHandler::bodiesIntersection(Enemies &e, PlayerShip &ship)
 	{
-		std::for_each(begin(e.enemies_), end(e.enemies_),
-			[&](auto &enemy)
+		for (auto &enemy : e.enemies_)
+		{
+			if (!enemy->IsDestroyed() && enemy->GetBounds().intersects(ship.GetBounds()))
 			{
-				if (!enemy->IsDestroyed() && enemy->GetBounds().intersects(ship.GetBounds()))
-				{
-					enemy->isDestroyed_ = true;
-					enemy->isCharging_ = false;
-					--ship.lives_;
-				}
-
-				if (enemy->IsOutOfScreen())
-				{
-					enemy->toRemove_ = true;
-					ship.score_ -= LVL1_POINTS_FOR_ENEMY;
-				}
+				enemy->isDestroyed_ = true;
+				enemy->isCharging_ = false;
+				--ship.lives_;
 			}
-		);
+
+			if (enemy->IsOutOfScreen())
+			{
+				enemy->toRemove_ = true;
+				ship.score_ -= LVL1_POINTS_FOR_ENEMY;
+			}
+		}
 	}
 
 	void InteractionsHandler::enemiesShooting(Enemies &e, PlayerShip& ship)
 	{
-		std::for_each(begin(e.enemies_), end(e.enemies_),
-		[&e, &ship](auto &enemy)
+		for (auto &enemy : e.enemies_)
 		{
-			if (!enemy->IsCharging()
+			auto const canShoot = 
+				!enemy->IsCharging()
 				&& !enemy->IsDestroyed()
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() > LVL1_ENEMIES_START_SHOOT_DELAY
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
 				&& enemy->GetPosition().x + ENEMIES_WIDTH > ship.GetPosition().x
-				&& enemy->GetPosition().x - ENEMIES_WIDTH < ship.GetPosition().x)
+				&& enemy->GetPosition().x - ENEMIES_WIDTH < ship.GetPosition().x;
+
+			if (canShoot)
 			{
 				if (Random<float>(0, 100) < LVL1_ENEMIES_CHANCE_TO_SHOOT)
 				{
@@ -85,6 +85,5 @@ namespace rstar
 				}
 			}
 		}
-		);
 	}
 }

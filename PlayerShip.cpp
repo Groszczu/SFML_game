@@ -41,13 +41,13 @@ namespace rstar
 	{
 		sf::Vector2f moveDirection{0,0};
 
-		// if A is pressed change movement vector.x to negative value
+		// if A or Left arrow is pressed change movement vector.x to negative value
 		if ( (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && GetPosition().x > 0 )
 		{
 			moveDirection.x = -movementSpeed_;
 		}
 
-		// if D is pressed change movement vector.x to positive value
+		// if D or Right arrow is pressed change movement vector.x to positive value
 		if ( (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) && GetPosition().x + GetBounds().width < WINDOW_WIDTH )
 		{
 			moveDirection.x = movementSpeed_;
