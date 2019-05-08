@@ -2,6 +2,7 @@
 #include "Game.hpp"
 #include "PlayerShip.hpp"
 #include "Enemy.hpp"
+#include "InteractionsHandler.hpp"
 #include <thread>
 
 namespace rstar
@@ -51,6 +52,8 @@ namespace rstar
 
 		// enemies pointer
 		std::unique_ptr<Enemies> enemies_;
+
+		InteractionsHandler handler_;
 
 		void updateScore();
 		void updateLives();

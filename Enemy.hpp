@@ -27,9 +27,7 @@ namespace rstar
 		void Update() override;
 		void Draw() const override;
 
-		friend void HandleBulletsIntersection(Enemies &e, PlayerShip &ship);
-		friend void HandleIntersection(Enemies &e, PlayerShip & ship);
-		friend void HandleEnemiesShooting(Enemies &e, PlayerShip &ship);
+		friend class InteractionsHandler;
 
 	private:
 		bool isDestroyed_{ false };
@@ -68,9 +66,7 @@ namespace rstar
 		static float BulletsSpeed;
 		static float ChargingSpeed;
 
-		friend void HandleBulletsIntersection(Enemies &e, PlayerShip &ship);
-		friend void HandleIntersection(Enemies &e, PlayerShip & ship);
-		friend void HandleEnemiesShooting(Enemies &e, PlayerShip &ship);
+		friend class InteractionsHandler;
 
 	private:
 		std::vector<std::unique_ptr<Enemy>> enemies_;
@@ -87,12 +83,5 @@ namespace rstar
 		void handleCharging(unsigned int enemiesCharging);
 		void reorderEnemies();
 	};
-
-	// friend free function to handle interactions between PlayerShip and Enemies
-	void HandleBulletsIntersection(Enemies &e, PlayerShip &ship);
-
-	void HandleIntersection(Enemies &e, PlayerShip &ship);
-
-	void HandleEnemiesShooting(Enemies &e, PlayerShip &ship);
 }
 

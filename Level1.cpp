@@ -77,9 +77,7 @@ namespace rstar
 			data_->stateMachine.SetState(std::make_unique<SplashState>(data_), true);
 		}
 
-		HandleBulletsIntersection(*enemies_, *player_);
-		HandleIntersection(*enemies_, *player_);
-		HandleEnemiesShooting(*enemies_, *player_);
+		handler_.Run(*enemies_, *player_);
 
 		player_->Update();
 		enemies_->Update();
