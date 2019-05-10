@@ -1,7 +1,7 @@
 #include "SplashState.hpp"
 #include <utility>
 #include "DEFINITIONS.hpp"
-#include "Level1.hpp"
+#include "Level1State.hpp"
 
 namespace rstar
 {
@@ -51,7 +51,7 @@ namespace rstar
 	{
 		if (fading_)
 		{			
-			data_->stateMachine.SetState(std::make_unique<Level1>(data_), true);
+			data_->stateMachine.SetState(std::make_unique<Level1State>(data_), true);
 		}
 
 		handleButtonAnimation();

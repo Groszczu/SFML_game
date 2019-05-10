@@ -17,7 +17,7 @@ constexpr float LVL1_ENEMIES_MOVE_FORWARD_DURATION = 0.8f;
 constexpr float LVL1_ENEMIES_BULLETS_SPEED = 3.f;
 constexpr float LVL1_ENEMIES_CHANCE_TO_SHOOT = 50.f;
 constexpr float LVL1_ENEMIES_START_SHOOT_DELAY = 5.f;
-constexpr float LVL1_POINTS = 3600.f;
+constexpr float LVL1_POINTS = 14'400.f;
 constexpr float LVL1_ENEMIES_CHARGING_SPEED = 2.f;
 
 constexpr float SHADOW_FRAME_TIME = 0.05f;
@@ -63,3 +63,6 @@ const std::string ENEMY_DST1_FILEPATH = "Resources/enemy_destroyed1.png";
 const std::string ENEMY_DST2_FILEPATH = "Resources/enemy_destroyed2.png";
 const std::string ENEMY_DST3_FILEPATH = "Resources/enemy_destroyed3.png";
 const std::string ENEMY_DST4_FILEPATH = "Resources/enemy_destroyed4.png";
+
+const std::string SCORE_STATE_BACKGROUND = "Resources/score_state_background.png";
+const std::string SCORES_FILEPATH = "User_data/high_score.txt";
