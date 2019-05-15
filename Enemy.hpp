@@ -20,7 +20,6 @@ namespace rstar
 		bool IsDestroyed() const { return isDestroyed_; }
 		bool IsToRemove() const { return toRemove_; }
 		bool IsCharging() const { return isCharging_; }
-		bool IsTouchingGameObj(GameObject &other) const;
 		void Charge() { isCharging_ = true; }
 
 

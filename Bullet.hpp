@@ -13,7 +13,7 @@ namespace rstar
 		class Bullet : public GameObject
 		{
 		public:
-			Bullet(GameDataPtr data, sf::Vector2f startPosition, float movementSpeed);
+			Bullet(GameDataPtr data, sf::Vector2f startPosition, float movementSpeed, bool playerBullet = false);
 
 			void Update() override;
 			void Draw() const override;

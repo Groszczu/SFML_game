@@ -15,6 +15,7 @@ namespace rstar
 
 		data_->assets.LoadTexture("Player Ship", PLAYER_SHIP_FILEPATH);
 		data_->assets.LoadTexture("Player Bullet", PLAYER_BULLET_FILEPATH);
+		data_->assets.LoadTexture("Enemy Bullet", ENEMY_BULLET_FILEPATH);
 
 		data_->assets.LoadTexture("Red Enemy1", RED_ENEMY1_FILEPATH);
 		data_->assets.LoadTexture("Red Enemy2", RED_ENEMY2_FILEPATH);
@@ -78,7 +79,7 @@ namespace rstar
 			data_->stateMachine.SetState(std::make_unique<ScoreDisplayState>(data_, playerScore_, SCORES_FILEPATH), true);
 		}
 
-		handler_.Run(*enemies_, *player_);
+		InteractionsHandler::Run(*enemies_, *player_);
 
 		player_->Update();
 		enemies_->Update();

@@ -99,11 +99,6 @@ namespace rstar
 		sprite_.move(moveDirection);
 	}
 
-	bool Enemy::IsTouchingGameObj(GameObject& other) const
-	{
-		return !isDestroyed_ && GetBounds().intersects(other.GetBounds());
-	}
-
 	void Enemy::Update()
 	{
 		if (isDestroyed_)

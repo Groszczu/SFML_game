@@ -54,6 +54,7 @@ const std::string LEVEL_BACKGROUND3_FILEPATH = "Resources/Level_background3.png"
 
 const std::string PLAYER_SHIP_FILEPATH = "Resources/player_ship.png";
 const std::string PLAYER_BULLET_FILEPATH = "Resources/player_bullet.png";
+const std::string ENEMY_BULLET_FILEPATH = "Resources/enemy_bullet.png";
 
 const std::string RED_ENEMY1_FILEPATH = "Resources/red_enemy1.png";
 const std::string RED_ENEMY2_FILEPATH = "Resources/red_enemy2.png";

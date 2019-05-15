@@ -54,8 +54,6 @@ namespace rstar
 		// enemies pointer
 		std::unique_ptr<Enemies> enemies_;
 
-		InteractionsHandler handler_;
-
 		void updateScore();
 		void updateLives();
 	};

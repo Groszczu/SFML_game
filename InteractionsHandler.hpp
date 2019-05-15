@@ -7,11 +7,11 @@ namespace rstar
 	class InteractionsHandler
 	{
 	public:
-		void Run(Enemies &e, PlayerShip &ship);
+		static void Run(Enemies &e, PlayerShip &ship);
 	private:
 
-		void bodiesIntersection(Enemies &e, PlayerShip &ship);
-		void bullets(Enemies &e, PlayerShip &ship);
-		void enemiesShooting(Enemies &e, PlayerShip &ship);
+		static void bodiesIntersection(Enemies &e, PlayerShip &ship);
+		static void bullets(Enemies &e, PlayerShip &ship);
+		static void enemiesShooting(Enemies &e, PlayerShip &ship);
 	};
 }

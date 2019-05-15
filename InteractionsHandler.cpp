@@ -18,28 +18,28 @@ namespace rstar
 			ship.bullets_.erase(std::remove_if(begin(ship.bullets_), end(ship.bullets_),
 				[&](auto &bullet)
 				{
-					auto intersect = bullet->GetBounds().intersects(enemy->GetBounds());
-					if (intersect)
+					auto hit = bullet->GetBounds().intersects(enemy->GetBounds()) && !enemy->IsDestroyed();
+					if (hit)
 					{
 						enemy->isDestroyed_ = true;
 						enemy->isCharging_ = false;
 						ship.score_ += LVL1_POINTS_FOR_ENEMY;
 					}
 
-					return intersect;
+					return hit;
 				}
 			), end(ship.bullets_));
 
 			e.bullets_.erase(std::remove_if(begin(e.bullets_), end(e.bullets_),
 				[&](auto &bullet)
 				{
-					auto intersect = bullet->GetBounds().intersects(ship.GetBounds());
-					if (intersect)
+					auto hit = bullet->GetBounds().intersects(ship.GetBounds());
+					if (hit)
 					{
 						--ship.lives_;
 					}
 
-					return intersect;
+					return hit;
 				}
 			), end(e.bullets_));
 		}
@@ -68,15 +68,11 @@ namespace rstar
 	{
 		for (auto &enemy : e.enemies_)
 		{
-			auto const canShoot = 
-				!enemy->IsCharging()
+			if (!enemy->IsCharging()
 				&& !enemy->IsDestroyed()
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() > LVL1_ENEMIES_START_SHOOT_DELAY
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
-				&& enemy->GetPosition().x + ENEMIES_WIDTH > ship.GetPosition().x
-				&& enemy->GetPosition().x - ENEMIES_WIDTH < ship.GetPosition().x;
-
-			if (canShoot)
+				&& abs(enemy->GetPosition().x - ship.GetPosition().x) < ENEMIES_WIDTH)
 			{
 				if (Random<float>(0, 100) < LVL1_ENEMIES_CHANCE_TO_SHOOT)
 				{

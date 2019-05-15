@@ -15,7 +15,7 @@ namespace rstar
 	void PlayerShip::Shoot()
 	{
 		// putting new Bullet object in the bullets_ vector [as new Bullet unique_ptr]
-		bullets_.emplace_back(std::make_unique<Bullet>(data_, sf::Vector2f{ GetPosition().x + GetBounds().width / 2.f, GetPosition().y }, bulletsSpeed_));
+		bullets_.emplace_back(std::make_unique<Bullet>(data_, sf::Vector2f{ GetPosition().x + GetBounds().width / 2.f, GetPosition().y }, bulletsSpeed_, true));
 	}
 
 	void PlayerShip::Update()

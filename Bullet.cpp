@@ -2,10 +2,17 @@
 
 namespace rstar
 {
-	BaseBullet::Bullet::Bullet(GameDataPtr data, sf::Vector2f startPosition, float movementSpeed)
+	BaseBullet::Bullet::Bullet(GameDataPtr data, sf::Vector2f startPosition, float movementSpeed, bool playerBullet)
 		: GameObject(data), movementSpeed_(movementSpeed)
 	{
-		sprite_.setTexture(data_->assets.GetTexture("Player Bullet"));
+		if (playerBullet)
+		{
+			sprite_.setTexture(data_->assets.GetTexture("Player Bullet"));
+		}
+		else
+		{
+			sprite_.setTexture(data_->assets.GetTexture("Enemy Bullet"));
+		}
 		sprite_.setScale(3.f, 3.f);
 		sprite_.setPosition(startPosition);
 	}
