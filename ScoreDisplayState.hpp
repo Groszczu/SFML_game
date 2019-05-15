@@ -9,11 +9,11 @@ namespace rstar
 	{
 	public:
 		ScoreDisplayState(GameDataPtr data, int playerScore, std::string const& fileName);
-		~ScoreDisplayState();
 
 		void HandleInput() override;
 		void Update() override;
 		void Draw() override;
+
 	private:
 		GameDataPtr data_;
 		const int playerScore_;

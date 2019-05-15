@@ -13,12 +13,6 @@ namespace rstar
 		background_.setTexture(data_->assets.GetTexture("Score state Background"));
 	}
 
-	ScoreDisplayState::~ScoreDisplayState()
-	{
-		scoreFile_.close();
-	}
-
-
 	void ScoreDisplayState::HandleInput()
 	{
 		sf::Event ev{};
