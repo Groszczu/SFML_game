@@ -25,11 +25,21 @@ namespace rstar
 				data_->window.close();
 				break;
 			case sf::Event::TextEntered:
-				if (ev.text.unicode < 128)
+				if (ev.text.unicode == 13) // ENTER Key pressed
+				{
+				}
+				else if (ev.text.unicode == 8) // BS Key pressed
+				{
+					if (!playerNick_.empty())
+					{
+						playerNick_.pop_back();
+					}
+				}
+				else if (ev.text.unicode < 128)
 				{
 					playerNick_ += static_cast<char>(ev.text.unicode);
-					std::cout << playerNick_ << ": " << playerScore_ << std::endl;
 				}
+				std::cout << playerNick_ << std::endl;
 				break;
 			default:
 				break;

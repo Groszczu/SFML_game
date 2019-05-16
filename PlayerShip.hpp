@@ -31,10 +31,15 @@ namespace rstar
 		int lives_{ 3 };
 		int score_{ 0 };
 
-		sf::Clock &shotClockRef_;
+		bool hit_{ false };
+
+		sf::Clock &clockRef_;
 		float shotDelayTimeOffset_{ 0 };
+		float animationTimeOffset_{ 0 };
+		int currentHitTexture_{ 0 };
 
 		void handleMovement();
 		void handleShooting();
+		void animateHit();
 	};
 }

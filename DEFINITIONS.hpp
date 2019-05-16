@@ -38,6 +38,8 @@ constexpr float SPACE_BETWEEN_ENEMIES = 5.f;
 
 constexpr float PLAYER_START_SPEED = 2.5f;
 constexpr float PLAYER_START_BULLET_SPEED = -8.f;
+constexpr float PLAYER_BLURRING_FRAME_TIME = 0.2f;
+constexpr int PLAYER_BLURRING_FRAMES = 15;
 
 const std::string SPLASH_STATE_BACKGROUND_FILEPATH = "Resources/splash_screen_background.png";
 
@@ -53,6 +55,7 @@ const std::string LEVEL_BACKGROUND2_FILEPATH = "Resources/Level_background2.png"
 const std::string LEVEL_BACKGROUND3_FILEPATH = "Resources/Level_background3.png";
 
 const std::string PLAYER_SHIP_FILEPATH = "Resources/player_ship.png";
+const std::string HIT_PLAYER_SHIP_FILEPATH = "Resources/hit_player_ship.png";
 const std::string PLAYER_BULLET_FILEPATH = "Resources/player_bullet.png";
 const std::string ENEMY_BULLET_FILEPATH = "Resources/enemy_bullet.png";
 

@@ -34,8 +34,10 @@ namespace rstar
 				[&](auto &bullet)
 				{
 					auto hit = bullet->GetBounds().intersects(ship.GetBounds());
-					if (hit)
+					if (ship.GetLives() > 0 && hit)
 					{
+						ship.hit_ = true;
+						ship.currentHitTexture_ = 0;
 						--ship.lives_;
 					}
 
@@ -53,6 +55,7 @@ namespace rstar
 			{
 				enemy->isDestroyed_ = true;
 				enemy->isCharging_ = false;
+				ship.hit_ = true;
 				--ship.lives_;
 			}
 

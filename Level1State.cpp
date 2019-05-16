@@ -14,6 +14,7 @@ namespace rstar
 		data_->assets.LoadTexture("Level Background3", LEVEL_BACKGROUND3_FILEPATH);
 
 		data_->assets.LoadTexture("Player Ship", PLAYER_SHIP_FILEPATH);
+		data_->assets.LoadTexture("Hit Player Ship", HIT_PLAYER_SHIP_FILEPATH);
 		data_->assets.LoadTexture("Player Bullet", PLAYER_BULLET_FILEPATH);
 		data_->assets.LoadTexture("Enemy Bullet", ENEMY_BULLET_FILEPATH);
 

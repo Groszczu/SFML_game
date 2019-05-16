@@ -5,7 +5,7 @@
 namespace rstar
 {
 	PlayerShip::PlayerShip(GameDataPtr data, sf::Clock &clockRef)
-		: GameObject(data), shotClockRef_(clockRef)
+		: GameObject(data), clockRef_(clockRef)
 	{
 		sprite_.setTexture(data_->assets.GetTexture("Player Ship"));
 		sprite_.setScale(2.f, 2.f);
@@ -22,8 +22,40 @@ namespace rstar
 	{
 		if (lives_ != 0)
 		{
+			if (hit_)
+			{
+				animateHit();
+			}
 			handleMovement();
 			handleShooting();
+		}
+	}
+
+	void PlayerShip::animateHit()
+	{
+		if (clockRef_.getElapsedTime().asSeconds() - animationTimeOffset_ > PLAYER_BLURRING_FRAME_TIME)
+		{
+			if (currentHitTexture_ % 2 == 0)
+			{
+				sprite_.setTexture(data_->assets.GetTexture("Hit Player Ship"));
+			}
+			else
+			{
+				sprite_.setTexture(data_->assets.GetTexture("Player Ship"));
+			}
+
+			if (currentHitTexture_ < PLAYER_BLURRING_FRAMES)
+			{
+				++currentHitTexture_;
+				animationTimeOffset_ = clockRef_.getElapsedTime().asSeconds();
+			}
+			else
+			{
+				hit_ = false;
+				sprite_.setTexture(data_->assets.GetTexture("Player Ship"));
+				currentHitTexture_ = 0;
+				animationTimeOffset_ = 0.f;
+			}
 		}
 	}
 
@@ -61,10 +93,10 @@ namespace rstar
 	{
 		// if space is pressed shoot
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) 
-			&& shotClockRef_.getElapsedTime().asSeconds() - shotDelayTimeOffset_ > SHOT_DELAY)
+			&& clockRef_.getElapsedTime().asSeconds() - shotDelayTimeOffset_ > SHOT_DELAY)
 		{
 			Shoot();
-			shotDelayTimeOffset_ = shotClockRef_.getElapsedTime().asSeconds();
+			shotDelayTimeOffset_ = clockRef_.getElapsedTime().asSeconds();
 		}
 
 		// Updating bullets position
