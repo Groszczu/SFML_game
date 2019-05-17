@@ -20,10 +20,18 @@ namespace rstar
 		std::fstream scoreFile_;
 		
 		std::string playerNick_{};
+		sf::Text playerNickTxt_;
+
+		sf::Text playerScoreTxt_;
 
 		sf::Sprite background_;
 
+		std::vector<std::pair<std::string, int>> scoreTable_;
+
 		bool initial_{ true };
 		bool fading_{ false };
+		bool nameEntered_{ false };
+
+		void loadScores();
 	};
 }

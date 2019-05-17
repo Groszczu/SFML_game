@@ -6,7 +6,8 @@ constexpr int WINDOW_HEIGHT = 480;
 
 constexpr int FINAL_NUMBER_OF_SHADOWS = 20;
 
-constexpr int FONT_SIZE = 12;
+constexpr int IN_GAME_FONT_SIZE = 12;
+constexpr int MENU_FONT_SIZE = 18;
 
 constexpr int LVL1_ENEMIES_COUNT = 60;
 constexpr int LVL1_POINTS_FOR_ENEMY = 100;
@@ -40,6 +41,7 @@ constexpr float PLAYER_START_SPEED = 2.5f;
 constexpr float PLAYER_START_BULLET_SPEED = -8.f;
 constexpr float PLAYER_BLURRING_FRAME_TIME = 0.2f;
 constexpr int PLAYER_BLURRING_FRAMES = 15;
+constexpr int PLAYER_NICK_MAX_LENGTH = 12;
 
 const std::string SPLASH_STATE_BACKGROUND_FILEPATH = "Resources/splash_screen_background.png";
 

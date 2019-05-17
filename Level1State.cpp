@@ -27,18 +27,18 @@ namespace rstar
 		data_->assets.LoadTexture("Enemy dst3", ENEMY_DST3_FILEPATH);
 		data_->assets.LoadTexture("Enemy dst4", ENEMY_DST4_FILEPATH);
 
-		data_->assets.LoadFont("Pixel font", PIXEL_FONT_FILEPATH);
+		data_->assets.LoadFont("Pixel Font", PIXEL_FONT_FILEPATH);
 
 		background_.setTexture(data_->assets.GetTexture("Level Background1"));
 
-		scoreTxt_.setFont(data_->assets.GetFont("Pixel font"));
-		scoreTxt_.setCharacterSize(FONT_SIZE);
-		scoreTxt_.setPosition(0, WINDOW_HEIGHT - FONT_SIZE);
+		scoreTxt_.setFont(data_->assets.GetFont("Pixel Font"));
+		scoreTxt_.setCharacterSize(IN_GAME_FONT_SIZE);
+		scoreTxt_.setPosition(0, WINDOW_HEIGHT - IN_GAME_FONT_SIZE);
 		scoreTxt_.setString("SCORE: " + std::to_string(playerScore_));
 
-		playerLivesTxt_.setFont(data_->assets.GetFont("Pixel font"));
-		playerLivesTxt_.setCharacterSize(FONT_SIZE);
-		playerLivesTxt_.setPosition(WINDOW_WIDTH - 10 * FONT_SIZE, WINDOW_HEIGHT - FONT_SIZE);
+		playerLivesTxt_.setFont(data_->assets.GetFont("Pixel Font"));
+		playerLivesTxt_.setCharacterSize(IN_GAME_FONT_SIZE);
+		playerLivesTxt_.setPosition(WINDOW_WIDTH - 10 * IN_GAME_FONT_SIZE, WINDOW_HEIGHT - IN_GAME_FONT_SIZE);
 		playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
 
 		player_ = std::make_unique<PlayerShip>(data_, lvlClock_);
