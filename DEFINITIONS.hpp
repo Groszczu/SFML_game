@@ -8,6 +8,7 @@ constexpr int FINAL_NUMBER_OF_SHADOWS = 20;
 
 constexpr int IN_GAME_FONT_SIZE = 12;
 constexpr int MENU_FONT_SIZE = 18;
+constexpr int SCORE_TABLE_FONT_SIZE = 14;
 
 constexpr int LVL1_ENEMIES_COUNT = 60;
 constexpr int LVL1_POINTS_FOR_ENEMY = 100;

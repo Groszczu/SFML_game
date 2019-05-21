@@ -1,13 +1,14 @@
 #include "ScoreDisplayState.hpp"
 #include "DEFINITIONS.hpp"
 #include <fstream>
-#include <iostream>
 #include <sstream>
+#include <iomanip>
+#include "SplashState.hpp"
 
 namespace rstar
 {
-	ScoreDisplayState::ScoreDisplayState(GameDataPtr data, int const playerScore, std::string const& fileName)
-		: data_(std::move(data)), playerScore_(playerScore), scoreFile_(fileName)
+	ScoreDisplayState::ScoreDisplayState(GameDataPtr data, int const playerScore, std::string fileName)
+		: data_(std::move(data)), playerScore_(playerScore), fileName_(std::move(fileName))
 	{
 		data_->assets.LoadTexture("Score state Background", SCORE_STATE_BACKGROUND);
 
@@ -16,15 +17,19 @@ namespace rstar
 		playerScoreTxt_.setFont(data_->assets.GetFont("Pixel Font"));
 		playerScoreTxt_.setFillColor(sf::Color::Yellow);
 		playerScoreTxt_.setCharacterSize(MENU_FONT_SIZE);
-		playerScoreTxt_.setPosition(WINDOW_WIDTH / 2.8f, WINDOW_HEIGHT * 3.f / 4.f);
+		playerScoreTxt_.setPosition(WINDOW_WIDTH / 2.8f, WINDOW_HEIGHT * 0.75f);
 		playerScoreTxt_.setString("SCORE: " + std::to_string(playerScore_));
 			
 		playerNickTxt_.setFont(data_->assets.GetFont("Pixel Font"));
 		playerNickTxt_.setFillColor(sf::Color::Yellow);
 		playerNickTxt_.setCharacterSize(MENU_FONT_SIZE);
 		playerNickTxt_.setPosition(WINDOW_WIDTH / 2.8f, WINDOW_HEIGHT * 3.f / 4.f - 2*MENU_FONT_SIZE);
-
 		playerNickTxt_.setString("NAME: ");
+
+		scoreTableTxt_.setFont(data_->assets.GetFont("Pixel Font"));
+		scoreTableTxt_.setFillColor(sf::Color::Yellow);
+		scoreTableTxt_.setCharacterSize(SCORE_TABLE_FONT_SIZE);
+		scoreTableTxt_.setPosition(WINDOW_WIDTH / 5.f, WINDOW_HEIGHT / 6.f);
 	}
 
 	void ScoreDisplayState::HandleInput()
@@ -59,7 +64,10 @@ namespace rstar
 							playerNick_ += static_cast<char>(ev.text.unicode);
 						}
 					}
-					std::cout << playerNick_ << std::endl;
+				}
+				else if (scoreCalculated_ && ev.text.unicode == 13)
+				{
+					fading_ = true;
 				}
 				break;
 			default:
@@ -70,43 +78,90 @@ namespace rstar
 
 	void ScoreDisplayState::Update()
 	{
-		//TODO: saving high score to file
+		if(fading_)
+		{
+			data_->stateMachine.SetState(std::make_unique<SplashState>(data_));
+		}
+
 		if (!nameEntered_)
 		{
 			playerNickTxt_.setString("NAME: " + playerNick_);
 		}
-		else
+		else if (!scoreCalculated_)
 		{
 			loadScores();
-			scoreTable_.emplace_back(std::make_pair(playerNick_, playerScore_));
-			std::sort(begin(scoreTable_), end(scoreTable_), [](auto const& lhs, auto const& rhs) { return lhs.second > rhs.second; });
+			generateScoreTable();
+			writeScores();
+			
+			scoreCalculated_ = true;
 		}
+		//TODO: animate 'HIT ENTER' button
 	}
 
 	void ScoreDisplayState::loadScores()
 	{
+		std::ifstream inputScoreFile{ fileName_ };
 		std::string nick, score;
 		std::string line;
-		while (std::getline(scoreFile_, line))
+		if (inputScoreFile)
 		{
-			std::istringstream lineStream{ line };
-			if (std::getline(lineStream, nick, ';') && std::getline(lineStream, score))
+			while (std::getline(inputScoreFile, line))
 			{
-				if (nick.length() > PLAYER_NICK_MAX_LENGTH)
+				std::istringstream lineStream{ line };
+				if (std::getline(lineStream, nick, ';') && std::getline(lineStream, score))
 				{
-					nick = nick.substr(0, PLAYER_NICK_MAX_LENGTH);
-				}
+					if (nick.length() > PLAYER_NICK_MAX_LENGTH)
+					{
+						nick = nick.substr(0, PLAYER_NICK_MAX_LENGTH);
+					}
 
-				score.erase(std::remove_if(begin(score), end(score), isspace), end(score));
-				
-				if (!nick.empty() &&
-					!score.empty() &&
-					std::all_of(begin(score), end(score), isdigit))
-				{
-					scoreTable_.emplace_back(std::make_pair(nick, std::stoi(score)));
+					score.erase(std::remove_if(begin(score), end(score), isspace), end(score));
+
+					if (!nick.empty() &&
+						!score.empty() &&
+						std::all_of(begin(score), end(score), isdigit))
+					{
+						scoreTable_.emplace_back(std::make_pair(nick, std::stoi(score)));
+					}
 				}
 			}
+			inputScoreFile.close();
 		}
+	}
+
+	void ScoreDisplayState::writeScores() const
+	{
+		std::ofstream outputScoreFile{ fileName_, std::ios::trunc };
+		if (outputScoreFile)
+		{
+			std::string nextLine{};
+			for (auto const& playerData : scoreTable_)
+			{
+				outputScoreFile << nextLine << playerData.first << ';' << playerData.second;
+				nextLine = '\n';
+			}
+			outputScoreFile.close();
+		}
+	}
+
+	void ScoreDisplayState::generateScoreTable()
+	{
+		scoreTable_.emplace_back(std::make_pair(playerNick_, playerScore_));
+		std::sort(begin(scoreTable_), end(scoreTable_), [](auto const& lhs, auto const& rhs) { return lhs.second > rhs.second; });
+		if (scoreTable_.size() > 10)
+		{
+			scoreTable_.erase(begin(scoreTable_) + 10, end(scoreTable_));
+		}
+		
+		std::ostringstream scores{};
+		unsigned place{};
+
+		scores << '\t' << std::left << std::setfill(' ') << std::setw(20) << "nick" << "score\n\n";
+		for (auto const& playerData :scoreTable_)
+		{
+			scores << ++place << '\t' << std::left << std::setfill(' ') << std::setw(20) << playerData.first << playerData.second << "\n\n";
+		}
+		scoreTableTxt_.setString(scores.str());
 	}
 
 
@@ -130,6 +185,10 @@ namespace rstar
 			{
 				data_->window.draw(playerNickTxt_);
 				data_->window.draw(playerScoreTxt_);
+			}
+			if (scoreCalculated_)
+			{
+				data_->window.draw(scoreTableTxt_);
 			}
 			data_->window.display();
 		}
