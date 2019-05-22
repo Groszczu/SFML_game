@@ -23,13 +23,19 @@ namespace rstar
 		playerNickTxt_.setFont(data_->assets.GetFont("Pixel Font"));
 		playerNickTxt_.setFillColor(sf::Color::Yellow);
 		playerNickTxt_.setCharacterSize(MENU_FONT_SIZE);
-		playerNickTxt_.setPosition(WINDOW_WIDTH / 2.8f, WINDOW_HEIGHT * 3.f / 4.f - 2*MENU_FONT_SIZE);
+		playerNickTxt_.setPosition(WINDOW_WIDTH / 2.8f, WINDOW_HEIGHT * 0.75f - 2*MENU_FONT_SIZE);
 		playerNickTxt_.setString("NAME: ");
 
 		scoreTableTxt_.setFont(data_->assets.GetFont("Pixel Font"));
 		scoreTableTxt_.setFillColor(sf::Color::Yellow);
 		scoreTableTxt_.setCharacterSize(SCORE_TABLE_FONT_SIZE);
 		scoreTableTxt_.setPosition(WINDOW_WIDTH / 5.f, WINDOW_HEIGHT / 6.f);
+
+		pressEnterTxt_.setFont(data_->assets.GetFont("Pixel Font"));
+		pressEnterTxt_.setFillColor(sf::Color::Yellow);
+		pressEnterTxt_.setCharacterSize(MENU_FONT_SIZE);
+		pressEnterTxt_.setPosition(WINDOW_WIDTH / 2.72f, WINDOW_HEIGHT * 0.9f);
+		pressEnterTxt_.setString("PRESS ENTER");
 	}
 
 	void ScoreDisplayState::HandleInput()
@@ -95,7 +101,10 @@ namespace rstar
 			
 			scoreCalculated_ = true;
 		}
-		//TODO: animate 'HIT ENTER' button
+		else
+		{
+			animateTxt();
+		}
 	}
 
 	void ScoreDisplayState::loadScores()
@@ -164,6 +173,22 @@ namespace rstar
 		scoreTableTxt_.setString(scores.str());
 	}
 
+	void ScoreDisplayState::animateTxt()
+	{
+		if (animationClock_.getElapsedTime().asSeconds() > BUTTON_ANIMATION_DURATION)
+		{
+			if (pressEnterTxt_.getFillColor() == sf::Color::Yellow)
+			{
+				// orange
+				pressEnterTxt_.setFillColor(sf::Color::Red);
+			}
+			else
+			{
+				pressEnterTxt_.setFillColor(sf::Color::Yellow);
+			}
+			animationClock_.restart();
+		}
+	}
 
 	void ScoreDisplayState::Draw()
 	{
@@ -189,6 +214,7 @@ namespace rstar
 			if (scoreCalculated_)
 			{
 				data_->window.draw(scoreTableTxt_);
+				data_->window.draw(pressEnterTxt_);
 			}
 			data_->window.display();
 		}

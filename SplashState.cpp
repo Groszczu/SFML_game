@@ -37,6 +37,7 @@ namespace rstar
 		{
 			fading_ = true;
 		}
+
 		if (data_->input.IsMouseOverSprite(startButton_, data_->window))
 		{
 			mouseOverButton_ = true;

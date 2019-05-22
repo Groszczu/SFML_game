@@ -20,14 +20,17 @@ namespace rstar
 		std::string fileName_;
 		
 		std::string playerNick_{};
-		sf::Text playerNickTxt_;
 
+		sf::Text playerNickTxt_;
 		sf::Text playerScoreTxt_;
 		sf::Text scoreTableTxt_;
+		sf::Text pressEnterTxt_;
 
 		sf::Sprite background_;
 
 		std::vector<std::pair<std::string, int>> scoreTable_;
+
+		sf::Clock animationClock_;
 
 		bool initial_{ true };
 		bool fading_{ false };
@@ -37,5 +40,6 @@ namespace rstar
 		void loadScores();
 		void writeScores() const;
 		void generateScoreTable();
+		void animateTxt();
 	};
 }
