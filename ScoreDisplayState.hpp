@@ -1,5 +1,4 @@
 #pragma once
-#include <fstream>
 #include "State.hpp"
 #include "Game.hpp"
 

@@ -110,10 +110,11 @@ namespace rstar
 	void ScoreDisplayState::loadScores()
 	{
 		std::ifstream inputScoreFile{ fileName_ };
-		std::string nick, score;
-		std::string line;
 		if (inputScoreFile)
 		{
+			std::string nick, score;
+			std::string line;
+
 			while (std::getline(inputScoreFile, line))
 			{
 				std::istringstream lineStream{ line };
@@ -126,9 +127,8 @@ namespace rstar
 
 					score.erase(std::remove_if(begin(score), end(score), isspace), end(score));
 
-					if (!nick.empty() &&
-						!score.empty() &&
-						std::all_of(begin(score), end(score), isdigit))
+					if (!nick.empty() && std::none_of(begin(nick), end(nick), isdigit) &&
+						!score.empty() && std::all_of(begin(score), end(score), isdigit) && std::stoi(score) <= LVL1_MAX_POINTS)
 					{
 						scoreTable_.emplace_back(std::make_pair(nick, std::stoi(score)));
 					}
@@ -157,16 +157,16 @@ namespace rstar
 	{
 		scoreTable_.emplace_back(std::make_pair(playerNick_, playerScore_));
 		std::sort(begin(scoreTable_), end(scoreTable_), [](auto const& lhs, auto const& rhs) { return lhs.second > rhs.second; });
-		if (scoreTable_.size() > 10)
+		if (scoreTable_.size() > SCORE_TABLE_MAX_SIZE)
 		{
-			scoreTable_.erase(begin(scoreTable_) + 10, end(scoreTable_));
+			scoreTable_.resize(SCORE_TABLE_MAX_SIZE);
 		}
 		
 		std::ostringstream scores{};
 		unsigned place{};
 
 		scores << '\t' << std::left << std::setfill(' ') << std::setw(20) << "nick" << "score\n\n";
-		for (auto const& playerData :scoreTable_)
+		for (auto const& playerData : scoreTable_)
 		{
 			scores << ++place << '\t' << std::left << std::setfill(' ') << std::setw(20) << playerData.first << playerData.second << "\n\n";
 		}
@@ -179,7 +179,6 @@ namespace rstar
 		{
 			if (pressEnterTxt_.getFillColor() == sf::Color::Yellow)
 			{
-				// orange
 				pressEnterTxt_.setFillColor(sf::Color::Red);
 			}
 			else
