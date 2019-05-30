@@ -11,18 +11,18 @@ constexpr int MENU_FONT_SIZE = 18;
 constexpr int SCORE_TABLE_FONT_SIZE = 14;
 
 constexpr unsigned LVL1_ENEMIES_COUNT = 60;
-constexpr unsigned LVL1_POINTS_FOR_ENEMY = 100;
+constexpr unsigned LVL1_POINTS_FOR_ENEMY = 30;
 constexpr unsigned LVL1_PLAYER_LIVES = 3;
 constexpr unsigned LVL1_ENEMIES_CHARGING_AT_ONCE = 3;
+constexpr unsigned LVL1_POINTS = 14'400;
+constexpr unsigned LVL1_MAX_POINTS = LVL1_ENEMIES_COUNT * LVL1_POINTS_FOR_ENEMY + LVL1_POINTS;
 constexpr float LVL1_ENEMIES_MOVEMENT_SPEED = 1.2f;
 constexpr float LVL1_ENEMIES_MOVE_FORWARD_TIME = 10.f;
 constexpr float LVL1_ENEMIES_MOVE_FORWARD_DURATION = 0.8f;
 constexpr float LVL1_ENEMIES_BULLETS_SPEED = 4.f;
 constexpr float LVL1_ENEMIES_CHANCE_TO_SHOOT = 50.f;
 constexpr float LVL1_ENEMIES_START_SHOOT_DELAY = 5.f;
-constexpr float LVL1_POINTS = 14'400.f;
-constexpr float LVL1_ENEMIES_CHARGING_SPEED = 2.f;
-constexpr int LVL1_MAX_POINTS = LVL1_ENEMIES_COUNT * LVL1_POINTS_FOR_ENEMY + static_cast<int>(LVL1_POINTS);
+constexpr float LVL1_ENEMIES_CHARGING_SPEED = 2.2f;
 
 constexpr int SCORE_TABLE_MAX_SIZE = 10;
 
@@ -33,8 +33,8 @@ constexpr float ENEMY_ANIMATION_DURATION = 0.15f;
 constexpr float BOOM_ANIMATION_DURATION = 0.1f;
 
 constexpr float SHOT_DELAY = 0.8f;
-constexpr float ENEMIES_SHOT_DELAY = 1.f;
 
+constexpr float ENEMIES_SHOT_DELAY = 0.8f;
 constexpr float ENEMIES_WIDTH = 32.f;
 constexpr float ENEMIES_HEIGHT = 32.f;
 constexpr float ENEMIES_TOP_MARGIN = 50.f;

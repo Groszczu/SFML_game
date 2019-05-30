@@ -85,7 +85,6 @@ namespace rstar
 			moveDirection.x = movementSpeed_;
 		}
 
-		// move player ship
 		sprite_.move(moveDirection);
 	}
 

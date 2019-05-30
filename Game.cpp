@@ -7,13 +7,13 @@ namespace rstar
 	{
 		data_->window.create(sf::VideoMode( width, height ), title, sf::Style::Close | sf::Style::Titlebar);
 		data_->stateMachine.SetState(std::make_unique<SplashState>(this->data_));
-		this->run();
+		run();
 	}
 
 	void Game::run() const
 	{
 		data_->window.setFramerateLimit(60);
-		while (this->data_->window.isOpen())
+		while (data_->window.isOpen())
 		{
 			data_->stateMachine.UpdatingStatesStack();
 

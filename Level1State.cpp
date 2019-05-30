@@ -8,7 +8,9 @@
 
 namespace rstar
 {
-	Level1State::Level1State(GameDataPtr data) : data_{ std::move(data) }
+	Level1State::Level1State(GameDataPtr data)
+		: data_{ std::move(data) },
+		backgroundThread_{ std::thread(&Level1State::backgroundAnimation, this) }
 	{
 		data_->assets.LoadTexture("Level Background1", LEVEL_BACKGROUND1_FILEPATH);
 		data_->assets.LoadTexture("Level Background2", LEVEL_BACKGROUND2_FILEPATH);
@@ -46,8 +48,6 @@ namespace rstar
 		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, LVL1_ENEMIES_MOVEMENT_SPEED, LVL1_ENEMIES_BULLETS_SPEED, LVL1_ENEMIES_CHARGING_SPEED,
 			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, lvlClock_);
 
-		backgroundThread_ = std::thread(&Level1State::backgroundAnimation, this);
-
 		lvlClock_.restart();
 	}
 
@@ -77,7 +77,6 @@ namespace rstar
 	{
 		if (fading_)
 		{
-			// TODO: display player score (maybe on other state)
 			updateScore();
 			data_->stateMachine.SetState(std::make_unique<ScoreDisplayState>(data_, playerScore_, SCORES_FILEPATH), true);
 		}
@@ -99,7 +98,6 @@ namespace rstar
 
 		if (enemies_->GetEnemiesCount() <= 0)
 		{
-			// TODO: display player score (maybe on other state)
 			lvlCompleteTime_ = lvlClock_.getElapsedTime().asSeconds();
 			fading_ = true;
 		}

@@ -71,8 +71,7 @@ namespace rstar
 	{
 		for (auto &enemy : e.enemies_)
 		{
-			if (!enemy->IsCharging()
-				&& !enemy->IsDestroyed()
+			if (!enemy->IsDestroyed()
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() > LVL1_ENEMIES_START_SHOOT_DELAY
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
 				&& abs(enemy->GetPosition().x - ship.GetPosition().x) < ENEMIES_WIDTH)
