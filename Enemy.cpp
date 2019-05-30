@@ -6,11 +6,11 @@
 
 namespace rstar
 {
-	Direction Enemies::MoveDirection = right;
-	float Enemies::MovementSpeed = ENEMIES_START_MOVEMENT_SPEED;
-	bool Enemies::MoveForward = false;
-	float Enemies::BulletsSpeed = LVL1_ENEMIES_BULLETS_SPEED;
-	float Enemies::ChargingSpeed = LVL1_ENEMIES_CHARGING_SPEED;
+	Direction Enemies::MoveDirection{};
+	float Enemies::MovementSpeed{};
+	bool Enemies::MoveForward{};
+	float Enemies::BulletsSpeed{};
+	float Enemies::ChargingSpeed{};
 
 	// Start enemy---------------------------------------------------------------------------
 	Enemy::Enemy(GameDataPtr data, sf::Vector2f startPosition, sf::Clock &clock)
@@ -120,7 +120,8 @@ namespace rstar
 	// End enemy---------------------------------------------------------------------------
 
 	// Start enemies-----------------------------------------------------------------------
-	Enemies::Enemies(GameDataPtr data, unsigned int enemiesCount, sf::Vector2f firstEnemyPos, sf::Clock &lvlClockRef)
+	Enemies::Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed,
+		sf::Vector2f firstEnemyPos, sf::Clock &lvlClockRef)
 		: enemiesCount_(enemiesCount), lvlClockRef_(lvlClockRef), data_(std::move(data))
 	{
 		std::generate_n(std::back_inserter(enemies_), enemiesCount,
@@ -139,7 +140,9 @@ namespace rstar
 			);
 
 		MoveDirection = right;
-		MovementSpeed = ENEMIES_START_MOVEMENT_SPEED;
+		MovementSpeed = movementSpeed;
+		BulletsSpeed = bulletsSpeed;
+		ChargingSpeed = chargingSpeed;
 		MoveForward = false;
 	}
 

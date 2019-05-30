@@ -3,7 +3,6 @@
 #include "PlayerShip.hpp"
 #include "Enemy.hpp"
 #include "State.hpp"
-#include "InteractionsHandler.hpp"
 #include <thread>
 
 namespace rstar

@@ -1,6 +1,5 @@
 #pragma once
 #include "PlayerShip.hpp"
-#include "Enemy.hpp"
 
 namespace rstar
 {

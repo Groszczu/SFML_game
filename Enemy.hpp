@@ -51,7 +51,8 @@ namespace rstar
 	class Enemies : public BaseBullet
 	{
 	public:
-		Enemies(GameDataPtr data, unsigned int enemiesCount, sf::Vector2f firstEnemyPos, sf::Clock &lvlClockRef);
+		Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed,
+			sf::Vector2f firstEnemyPos, sf::Clock &lvlClockRef);
 
 		unsigned int GetEnemiesCount() const { return enemiesCount_; }
 		void Shoot(sf::Vector2f const& startPosition);

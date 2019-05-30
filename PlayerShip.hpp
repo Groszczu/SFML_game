@@ -1,9 +1,9 @@
 #pragma once
-#include <vector>
-#include <memory>
 #include "GameObject.hpp"
 #include "Bullet.hpp"
 #include "DEFINITIONS.hpp"
+#include <vector>
+#include <memory>
 
 namespace rstar
 {

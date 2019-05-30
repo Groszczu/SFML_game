@@ -1,9 +1,10 @@
 #include "Level1State.hpp"
 #include "DEFINITIONS.hpp"
 #include "Enemy.hpp"
-#include <thread>
 #include "SplashState.hpp"
 #include "ScoreDisplayState.hpp"
+#include "InteractionsHandler.hpp"
+#include <thread>
 
 namespace rstar
 {
@@ -42,7 +43,8 @@ namespace rstar
 		playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
 
 		player_ = std::make_unique<PlayerShip>(data_, lvlClock_);
-		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, lvlClock_);
+		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, LVL1_ENEMIES_MOVEMENT_SPEED, LVL1_ENEMIES_BULLETS_SPEED, LVL1_ENEMIES_CHARGING_SPEED,
+			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, lvlClock_);
 
 		backgroundThread_ = std::thread(&Level1State::backgroundAnimation, this);
 
