@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Game.hpp"
 #include "PlayerShip.hpp"
 #include "Enemy.hpp"
@@ -7,16 +8,16 @@
 
 namespace rstar
 {
-	class Level1State final : public State
+	class Level2State final : public State
 	{
 	public:
-		explicit Level1State(GameDataPtr data);
+		Level2State(GameDataPtr data, int playerLives, int playerScore);
 
-		Level1State(Level1State const& other) = delete;
-		Level1State(Level1State&& l1) = delete;
-		Level1State& operator=(Level1State const& other) = delete;
-		Level1State& operator=(Level1State&& other) = delete;
-		~Level1State();
+		Level2State(Level2State const& other) = delete;
+		Level2State(Level2State && other) = delete;
+		Level2State& operator=(Level2State const& other) = delete;
+		Level2State& operator=(Level2State&& other) = delete;
+		~Level2State();
 
 		void HandleInput() override;
 		void Update() override;
@@ -26,11 +27,11 @@ namespace rstar
 		GameDataPtr data_;
 		sf::Sprite background_;
 
-		int playerScore_{ 0 };
-		sf::Text scoreTxt_;
-
-		int playerLives_{ PLAYER_LIVES };
+		int playerLives_;
 		sf::Text playerLivesTxt_;
+
+		int playerScore_;
+		sf::Text scoreTxt_;
 
 		sf::Clock lvlClock_;
 		float lvlCompleteTime_{ 0.f };
@@ -57,4 +58,5 @@ namespace rstar
 		void updateLives();
 	};
 }
+
 

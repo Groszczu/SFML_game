@@ -1,6 +1,5 @@
 #include "PlayerShip.hpp"
 #include "DEFINITIONS.hpp"
-#include <vector>
 
 namespace rstar
 {
@@ -12,10 +11,18 @@ namespace rstar
 		sprite_.setPosition(static_cast<float>(WINDOW_WIDTH) / 2.f - GetBounds().width / 2.f, static_cast<float>(WINDOW_HEIGHT) - GetBounds().height * 2.f);
 	}
 
+	PlayerShip::PlayerShip(GameDataPtr data, sf::Clock &clockRef, int lives, int score, float movementSpeed, float bulletsSpeed)
+		: GameObject(data), clockRef_(clockRef), lives_(lives), score_(score), movementSpeed_(movementSpeed), bulletsSpeed_(bulletsSpeed)
+	{
+		sprite_.setTexture(data_->assets.GetTexture("Player Ship"));
+		sprite_.setScale(2.f, 2.f);
+		sprite_.setPosition(static_cast<float>(WINDOW_WIDTH) / 2.f - GetBounds().width / 2.f, static_cast<float>(WINDOW_HEIGHT) - GetBounds().height * 2.f);
+	}
+
+
 	void PlayerShip::Shoot()
 	{
-		// putting new Bullet object in the bullets_ vector [as new Bullet unique_ptr]
-		bullets_.emplace_back(std::make_unique<Bullet>(data_, sf::Vector2f{ GetPosition().x + GetBounds().width / 2.f, GetPosition().y }, bulletsSpeed_, true));
+		bullet_ = std::make_unique<Bullet>(data_, sf::Vector2f{ GetPosition().x + GetBounds().width / 2.f, GetPosition().y }, bulletsSpeed_, true);
 	}
 
 	void PlayerShip::Update()
@@ -59,13 +66,12 @@ namespace rstar
 		}
 	}
 
-	// drawing player ship and its bullets to the screen
 	void PlayerShip::Draw() const
 	{
 		data_->window.draw(sprite_);
-		for (auto const& bullet : bullets_)
+		if (bullet_)
 		{
-			bullet->Draw();
+			bullet_->Draw();
 		}
 	}
 
@@ -91,24 +97,23 @@ namespace rstar
 	void PlayerShip::handleShooting()
 	{
 		// if space is pressed shoot
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) 
-			&& clockRef_.getElapsedTime().asSeconds() - shotDelayTimeOffset_ > SHOT_DELAY)
+		if (!bullet_ &&
+			sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 		{
 			Shoot();
-			shotDelayTimeOffset_ = clockRef_.getElapsedTime().asSeconds();
 		}
 
-		// Updating bullets position
-		bullets_.erase(std::remove_if(begin(bullets_), end(bullets_),
-			[](auto &bullet)
+		if (bullet_)
 		{
-				return bullet->IsOutOfScreen();
+			if (bullet_->IsOutOfScreen())
+			{
+				bullet_.reset(nullptr);
+			}
+			else
+			{
+				bullet_->Update();
+			}
 		}
-		), end(bullets_));
 
-		for (auto &bullet : bullets_)
-		{
-			bullet->Update();
-		}
 	}
 }

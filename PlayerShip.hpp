@@ -2,7 +2,6 @@
 #include "GameObject.hpp"
 #include "Bullet.hpp"
 #include "DEFINITIONS.hpp"
-#include <vector>
 #include <memory>
 
 namespace rstar
@@ -12,7 +11,8 @@ namespace rstar
 	{
 	public:
 		PlayerShip(GameDataPtr data, sf::Clock &clockRef);
-
+		PlayerShip(GameDataPtr data, sf::Clock &clockRef, int lives, int score, float movementSpeed, float bulletsSpeed);
+		
 		void Shoot();
 		int GetScore() const { return score_; }
 		int GetLives() const { return lives_; }
@@ -23,18 +23,18 @@ namespace rstar
 		friend class InteractionsHandler;
 		
 	private:
+		sf::Clock &clockRef_;
+
+		int lives_{ PLAYER_LIVES };
+		int score_{ 0 };
+
 		float movementSpeed_{ PLAYER_START_SPEED };
 		float bulletsSpeed_{ PLAYER_START_BULLET_SPEED };
 
-		std::vector<std::unique_ptr<Bullet>> bullets_;
-
-		int lives_{ 3 };
-		int score_{ 0 };
+		std::unique_ptr<Bullet> bullet_;
 
 		bool hit_{ false };
 
-		sf::Clock &clockRef_;
-		float shotDelayTimeOffset_{ 0 };
 		float animationTimeOffset_{ 0 };
 		int currentHitTexture_{ 0 };
 

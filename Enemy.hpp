@@ -52,7 +52,7 @@ namespace rstar
 	{
 	public:
 		Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed,
-			sf::Vector2f firstEnemyPos, sf::Clock &lvlClockRef);
+			sf::Vector2f firstEnemyPos, float space, sf::Clock &lvlClockRef);
 
 		unsigned int GetEnemiesCount() const { return enemiesCount_; }
 		void Shoot(sf::Vector2f const& startPosition);
@@ -69,15 +69,15 @@ namespace rstar
 		friend class InteractionsHandler;
 
 	private:
+		GameDataPtr data_;
+		sf::Clock &lvlClockRef_;
+
 		std::vector<std::unique_ptr<Enemy>> enemies_;
 		std::vector<std::unique_ptr<Bullet>> bullets_;
 		unsigned int enemiesCount_;
 
-		sf::Clock &lvlClockRef_;
 		float moveForwardTimeOffset_{ 0.f };
 		float shotDelayTimeOffset_{ 0.f };
-
-		GameDataPtr data_;
 
 		void removeDestroyedEnemies();
 		void handleCharging(unsigned int enemiesCharging);

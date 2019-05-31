@@ -4,50 +4,46 @@
 
 namespace rstar
 {
-	void InteractionsHandler::Run(Enemies &e, PlayerShip &ship)
+	void InteractionsHandler::Run(Enemies &e, PlayerShip &ship, unsigned pointsForEnemy)
 	{
-		bullets(e, ship);
-		bodiesIntersection(e, ship);
+		bullets(e, ship, pointsForEnemy);
+		bodiesIntersection(e, ship, pointsForEnemy);
 		enemiesShooting(e, ship);
 	}
 
-	void InteractionsHandler::bullets(Enemies &e, PlayerShip &ship)
+	void InteractionsHandler::bullets(Enemies &e, PlayerShip &ship, unsigned pointsForEnemy)
 	{
 		for (auto &enemy : e.enemies_)
 		{
-			ship.bullets_.erase(std::remove_if(begin(ship.bullets_), end(ship.bullets_),
-				[&](auto &bullet)
-				{
-					auto hit = bullet->GetBounds().intersects(enemy->GetBounds()) && !enemy->IsDestroyed();
-					if (hit)
-					{
-						enemy->isDestroyed_ = true;
-						enemy->isCharging_ = false;
-						ship.score_ += LVL1_POINTS_FOR_ENEMY;
-					}
+			if (ship.bullet_ &&
+				!enemy->IsDestroyed() && ship.bullet_->GetBounds().intersects(enemy->GetBounds()))
+			{
+				enemy->isDestroyed_ = true;
+				enemy->isCharging_ = false;
+				ship.bullet_.reset(nullptr);
+				ship.score_ += pointsForEnemy;
+			}
 
-					return hit;
-				}
-			), end(ship.bullets_));
-
-			e.bullets_.erase(std::remove_if(begin(e.bullets_), end(e.bullets_),
-				[&](auto &bullet)
-				{
-					auto hit = bullet->GetBounds().intersects(ship.GetBounds());
-					if (ship.GetLives() > 0 && hit)
-					{
-						ship.hit_ = true;
-						ship.currentHitTexture_ = 0;
-						--ship.lives_;
-					}
-
-					return hit;
-				}
-			), end(e.bullets_));
 		}
+
+		e.bullets_.erase(std::remove_if(begin(e.bullets_), end(e.bullets_),
+			[&](auto &bullet)
+			{
+				auto hit = bullet->GetBounds().intersects(ship.GetBounds());
+				if (ship.GetLives() > 0 && hit)
+				{
+					ship.hit_ = true;
+					ship.currentHitTexture_ = 0;
+					--ship.lives_;
+				}
+
+				return hit;
+			}
+		), end(e.bullets_));
+		
 	}
 
-	void InteractionsHandler::bodiesIntersection(Enemies &e, PlayerShip &ship)
+	void InteractionsHandler::bodiesIntersection(Enemies &e, PlayerShip &ship, unsigned pointsForEnemy)
 	{
 		for (auto &enemy : e.enemies_)
 		{
@@ -62,7 +58,7 @@ namespace rstar
 			if (enemy->IsOutOfScreen())
 			{
 				enemy->toRemove_ = true;
-				ship.score_ -= LVL1_POINTS_FOR_ENEMY;
+				ship.score_ -= pointsForEnemy;
 			}
 		}
 	}

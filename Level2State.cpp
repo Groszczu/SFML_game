@@ -1,38 +1,13 @@
-#include "Level1State.hpp"
-#include "DEFINITIONS.hpp"
-#include "Enemy.hpp"
-#include "SplashState.hpp"
+#include "Level2State.hpp"
 #include "ScoreDisplayState.hpp"
 #include "InteractionsHandler.hpp"
-#include <thread>
-#include "Level2State.hpp"
 
 namespace rstar
 {
-	Level1State::Level1State(GameDataPtr data)
-		: data_{ std::move(data) },
-		backgroundThread_{ std::thread(&Level1State::backgroundAnimation, this) }
+	Level2State::Level2State(GameDataPtr data, int playerLives, int playerScore)
+		: data_(std::move(data)), playerLives_(playerLives), playerScore_(playerScore), backgroundThread_(std::thread(&Level2State::backgroundAnimation, this)),
+		player_(std::make_unique<PlayerShip>(data_, lvlClock_, playerLives_, playerScore, PLAYER_START_SPEED, PLAYER_START_BULLET_SPEED)) 
 	{
-		data_->assets.LoadTexture("Level Background1", LEVEL_BACKGROUND1_FILEPATH);
-		data_->assets.LoadTexture("Level Background2", LEVEL_BACKGROUND2_FILEPATH);
-		data_->assets.LoadTexture("Level Background3", LEVEL_BACKGROUND3_FILEPATH);
-
-		data_->assets.LoadTexture("Player Ship", PLAYER_SHIP_FILEPATH);
-		data_->assets.LoadTexture("Hit Player Ship", HIT_PLAYER_SHIP_FILEPATH);
-		data_->assets.LoadTexture("Player Bullet", PLAYER_BULLET_FILEPATH);
-		data_->assets.LoadTexture("Enemy Bullet", ENEMY_BULLET_FILEPATH);
-
-		data_->assets.LoadTexture("Red Enemy1", RED_ENEMY1_FILEPATH);
-		data_->assets.LoadTexture("Red Enemy2", RED_ENEMY2_FILEPATH);
-		data_->assets.LoadTexture("Red Enemy3", RED_ENEMY3_FILEPATH);
-
-		data_->assets.LoadTexture("Enemy dst1", ENEMY_DST1_FILEPATH);
-		data_->assets.LoadTexture("Enemy dst2", ENEMY_DST2_FILEPATH);
-		data_->assets.LoadTexture("Enemy dst3", ENEMY_DST3_FILEPATH);
-		data_->assets.LoadTexture("Enemy dst4", ENEMY_DST4_FILEPATH);
-
-		data_->assets.LoadFont("Pixel Font", PIXEL_FONT_FILEPATH);
-
 		background_.setTexture(data_->assets.GetTexture("Level Background1"));
 
 		scoreTxt_.setFont(data_->assets.GetFont("Pixel Font"));
@@ -45,14 +20,13 @@ namespace rstar
 		playerLivesTxt_.setPosition(WINDOW_WIDTH - 10 * IN_GAME_FONT_SIZE, WINDOW_HEIGHT - IN_GAME_FONT_SIZE);
 		playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
 
-		player_ = std::make_unique<PlayerShip>(data_, lvlClock_);
-		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, LVL1_ENEMIES_MOVEMENT_SPEED, LVL1_ENEMIES_BULLETS_SPEED, LVL1_ENEMIES_CHARGING_SPEED,
-			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL1_SPACE_BETWEEN_ENEMIES, lvlClock_);
+		enemies_ = std::make_unique<Enemies>(data_, LVL2_ENEMIES_COUNT, LVL2_ENEMIES_MOVEMENT_SPEED, LVL2_ENEMIES_BULLETS_SPEED, LVL2_ENEMIES_CHARGING_SPEED,
+			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL2_SPACE_BETWEEN_ENEMIES, lvlClock_);
 
 		lvlClock_.restart();
 	}
 
-	Level1State::~Level1State()
+	Level2State::~Level2State()
 	{
 		stopThread_ = true;
 		if (backgroundThread_.joinable())
@@ -61,7 +35,7 @@ namespace rstar
 		}
 	}
 
-	void Level1State::HandleInput()
+	void Level2State::HandleInput()
 	{
 		sf::Event ev{};
 
@@ -74,22 +48,16 @@ namespace rstar
 		}
 	}
 
-	void Level1State::Update()
+	void Level2State::Update()
 	{
+
 		if (fading_)
 		{
 			updateScore();
-			if (playerLives_ <= 0)
-			{
-				data_->stateMachine.SetState(std::make_unique<ScoreDisplayState>(data_, playerScore_, SCORES_FILEPATH), true);
-			}
-			else
-			{
-				data_->stateMachine.SetState(std::make_unique<Level2State>(data_, playerLives_, playerScore_), true);
-			}
+			data_->stateMachine.SetState(std::make_unique<ScoreDisplayState>(data_, playerScore_, SCORES_FILEPATH), true);
 		}
 
-		InteractionsHandler::Run(*enemies_, *player_, LVL1_POINTS_FOR_ENEMY);
+		InteractionsHandler::Run(*enemies_, *player_, LVL2_POINTS_FOR_ENEMY);
 
 		player_->Update();
 		enemies_->Update();
@@ -110,8 +78,8 @@ namespace rstar
 			fading_ = true;
 		}
 	}
-
-	void Level1State::Draw()
+	
+	void Level2State::Draw()
 	{
 		if (initial_)
 		{
@@ -138,7 +106,7 @@ namespace rstar
 		}
 	}
 
-	void Level1State::backgroundAnimation()
+	void Level2State::backgroundAnimation()
 	{
 		auto localTimeOffset{ 0.f };
 		while (!stopThread_)
@@ -168,11 +136,11 @@ namespace rstar
 		}
 	}
 
-	void Level1State::updateScore()
+	void Level2State::updateScore()
 	{
 		if (fading_ && lvlCompleteTime_ > 0)
 		{
-			playerScore_ += static_cast<int>(LVL1_POINTS / lvlCompleteTime_);
+			playerScore_ += static_cast<int>(LVL2_POINTS / lvlCompleteTime_);
 		}
 		else if (player_->GetScore() != playerScore_)
 		{
@@ -181,7 +149,7 @@ namespace rstar
 		}
 	}
 
-	void Level1State::updateLives()
+	void Level2State::updateLives()
 	{
 		if (player_->GetLives() != playerLives_ && player_->GetLives() >= 0)
 		{

@@ -121,8 +121,8 @@ namespace rstar
 
 	// Start enemies-----------------------------------------------------------------------
 	Enemies::Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed,
-		sf::Vector2f firstEnemyPos, sf::Clock &lvlClockRef)
-		: enemiesCount_(enemiesCount), lvlClockRef_(lvlClockRef), data_(std::move(data))
+		sf::Vector2f firstEnemyPos, float space, sf::Clock &lvlClockRef)
+		: data_(std::move(data)), lvlClockRef_(lvlClockRef), enemiesCount_(enemiesCount)
 	{
 		std::generate_n(std::back_inserter(enemies_), enemiesCount,
 			[&]
@@ -130,10 +130,10 @@ namespace rstar
 				if (firstEnemyPos.x + ENEMIES_WIDTH >= WINDOW_WIDTH - ENEMIES_SIDE_MARGIN)
 				{
 					firstEnemyPos.x = ENEMIES_SIDE_MARGIN;
-					firstEnemyPos.y += ENEMIES_HEIGHT + SPACE_BETWEEN_ENEMIES;
+					firstEnemyPos.y += ENEMIES_HEIGHT + space;
 				}
 
-				firstEnemyPos.x += ENEMIES_WIDTH + SPACE_BETWEEN_ENEMIES;
+				firstEnemyPos.x += ENEMIES_WIDTH + space;
 
 				return std::make_unique<Enemy>(data_, firstEnemyPos, lvlClockRef_);
 			}
@@ -203,7 +203,7 @@ namespace rstar
 
 	void Enemies::Shoot(sf::Vector2f const& startPosition)
 	{
-		// putting new Bullet object in the bullets_ vector [as new Bullet unique_ptr]
+		// putting new Bullet object in the bullet_ vector [as new Bullet unique_ptr]
 		bullets_.emplace_back(std::make_unique<Bullet>(data_, startPosition, BulletsSpeed));
 	}
 
