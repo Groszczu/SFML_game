@@ -51,7 +51,7 @@ namespace rstar
 	class Enemies : public BaseBullet
 	{
 	public:
-		Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed,
+		Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed, unsigned enemiesCharging,
 			sf::Vector2f firstEnemyPos, float space, sf::Clock &lvlClockRef);
 
 		unsigned int GetEnemiesCount() const { return enemiesCount_; }
@@ -75,6 +75,8 @@ namespace rstar
 		std::vector<std::unique_ptr<Enemy>> enemies_;
 		std::vector<std::unique_ptr<Bullet>> bullets_;
 		unsigned int enemiesCount_;
+
+		const unsigned enemiesCharging_;
 
 		float moveForwardTimeOffset_{ 0.f };
 		float shotDelayTimeOffset_{ 0.f };

@@ -47,7 +47,7 @@ namespace rstar
 
 		player_ = std::make_unique<PlayerShip>(data_, lvlClock_);
 		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, LVL1_ENEMIES_MOVEMENT_SPEED, LVL1_ENEMIES_BULLETS_SPEED, LVL1_ENEMIES_CHARGING_SPEED,
-			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL1_SPACE_BETWEEN_ENEMIES, lvlClock_);
+			LVL1_ENEMIES_CHARGING_AT_ONCE, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL1_SPACE_BETWEEN_ENEMIES, lvlClock_);
 
 		lvlClock_.restart();
 	}
@@ -89,7 +89,7 @@ namespace rstar
 			}
 		}
 
-		InteractionsHandler::Run(*enemies_, *player_, LVL1_POINTS_FOR_ENEMY);
+		InteractionsHandler::Run(*enemies_, *player_, LVL1_POINTS_FOR_ENEMY, LVL1_ENEMIES_CHANCE_TO_SHOOT);
 
 		player_->Update();
 		enemies_->Update();

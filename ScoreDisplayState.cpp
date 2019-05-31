@@ -128,7 +128,7 @@ namespace rstar
 					score.erase(std::remove_if(begin(score), end(score), isspace), end(score));
 
 					if (!nick.empty() && std::none_of(begin(nick), end(nick), isdigit) &&
-						!score.empty() && std::all_of(begin(score), end(score), isdigit) && std::stoi(score) <= LVL1_MAX_POINTS)
+						!score.empty() && std::all_of(begin(score), end(score), isdigit) && std::stoi(score) <= static_cast<int>(MAX_POINTS))
 					{
 						scoreTable_.emplace_back(std::make_pair(nick, std::stoi(score)));
 					}

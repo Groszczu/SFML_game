@@ -4,11 +4,11 @@
 
 namespace rstar
 {
-	void InteractionsHandler::Run(Enemies &e, PlayerShip &ship, unsigned pointsForEnemy)
+	void InteractionsHandler::Run(Enemies &e, PlayerShip &ship, unsigned pointsForEnemy, float enemiesChanceToShoot)
 	{
 		bullets(e, ship, pointsForEnemy);
 		bodiesIntersection(e, ship, pointsForEnemy);
-		enemiesShooting(e, ship);
+		enemiesShooting(e, ship, enemiesChanceToShoot);
 	}
 
 	void InteractionsHandler::bullets(Enemies &e, PlayerShip &ship, unsigned pointsForEnemy)
@@ -63,7 +63,7 @@ namespace rstar
 		}
 	}
 
-	void InteractionsHandler::enemiesShooting(Enemies &e, PlayerShip& ship)
+	void InteractionsHandler::enemiesShooting(Enemies &e, PlayerShip& ship, float chanceToShoot)
 	{
 		for (auto &enemy : e.enemies_)
 		{
@@ -72,7 +72,7 @@ namespace rstar
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
 				&& abs(enemy->GetPosition().x - ship.GetPosition().x) < ENEMIES_WIDTH)
 			{
-				if (Random<float>(0, 100) < LVL1_ENEMIES_CHANCE_TO_SHOOT)
+				if (Random<float>(0, 100) < chanceToShoot)
 				{
 					e.Shoot(sf::Vector2f{ enemy->GetPosition().x - enemy->GetBounds().width / 2.f, enemy->GetPosition().y });
 					e.shotDelayTimeOffset_ = e.lvlClockRef_.getElapsedTime().asSeconds();

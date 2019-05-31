@@ -120,9 +120,9 @@ namespace rstar
 	// End enemy---------------------------------------------------------------------------
 
 	// Start enemies-----------------------------------------------------------------------
-	Enemies::Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed,
+	Enemies::Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed, unsigned enemiesCharging,
 		sf::Vector2f firstEnemyPos, float space, sf::Clock &lvlClockRef)
-		: data_(std::move(data)), lvlClockRef_(lvlClockRef), enemiesCount_(enemiesCount)
+		: data_(std::move(data)), lvlClockRef_(lvlClockRef), enemiesCount_(enemiesCount), enemiesCharging_(enemiesCharging)
 	{
 		std::generate_n(std::back_inserter(enemies_), enemiesCount,
 			[&]
@@ -166,7 +166,7 @@ namespace rstar
 		{
 			MoveForward = true;
 			moveForwardTimeOffset_ = lvlClockRef_.getElapsedTime().asSeconds();
-			handleCharging(LVL1_ENEMIES_CHARGING_AT_ONCE);
+			handleCharging(enemiesCharging_);
 		}
 		if (MoveForward && lvlClockRef_.getElapsedTime().asSeconds() - moveForwardTimeOffset_ > LVL1_ENEMIES_MOVE_FORWARD_DURATION)
 		{
@@ -209,10 +209,13 @@ namespace rstar
 
 	void Enemies::handleCharging(unsigned int enemiesCharging)
 	{
-		for (unsigned int i = 0; i < enemiesCharging; i++)
+		if (!enemies_.empty())
 		{
-			auto const chargingEnemyIndex = Random<int>(0, GetEnemiesCount() - 1);
-			enemies_.at(chargingEnemyIndex)->Charge();
+			for (unsigned int i = 0; i < enemiesCharging; i++)
+			{
+				auto const chargingEnemyIndex = Random<int>(0, GetEnemiesCount() - 1);
+				enemies_.at(chargingEnemyIndex)->Charge();
+			}
 		}
 	}
 

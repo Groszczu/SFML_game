@@ -21,7 +21,7 @@ namespace rstar
 		playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
 
 		enemies_ = std::make_unique<Enemies>(data_, LVL2_ENEMIES_COUNT, LVL2_ENEMIES_MOVEMENT_SPEED, LVL2_ENEMIES_BULLETS_SPEED, LVL2_ENEMIES_CHARGING_SPEED,
-			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL2_SPACE_BETWEEN_ENEMIES, lvlClock_);
+			LVL2_ENEMIES_CHARGING_AT_ONCE, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL2_SPACE_BETWEEN_ENEMIES, lvlClock_);
 
 		lvlClock_.restart();
 	}
@@ -57,7 +57,7 @@ namespace rstar
 			data_->stateMachine.SetState(std::make_unique<ScoreDisplayState>(data_, playerScore_, SCORES_FILEPATH), true);
 		}
 
-		InteractionsHandler::Run(*enemies_, *player_, LVL2_POINTS_FOR_ENEMY);
+		InteractionsHandler::Run(*enemies_, *player_, LVL2_POINTS_FOR_ENEMY, LVL2_ENEMIES_CHANCE_TO_SHOOT);
 
 		player_->Update();
 		enemies_->Update();

@@ -14,7 +14,6 @@ constexpr unsigned LVL1_ENEMIES_COUNT{ 52 };
 constexpr unsigned LVL1_POINTS_FOR_ENEMY{ 30 };
 constexpr unsigned LVL1_ENEMIES_CHARGING_AT_ONCE{ 3 };
 constexpr unsigned LVL1_POINTS{ 14'400 };
-constexpr unsigned LVL1_MAX_POINTS{ LVL1_ENEMIES_COUNT * LVL1_POINTS_FOR_ENEMY + LVL1_POINTS };
 constexpr float LVL1_ENEMIES_MOVEMENT_SPEED{ 1.2f };
 constexpr float LVL1_ENEMIES_MOVE_FORWARD_TIME{ 10.f };
 constexpr float LVL1_ENEMIES_MOVE_FORWARD_DURATION{ 0.8f };
@@ -30,9 +29,11 @@ constexpr unsigned LVL2_ENEMIES_CHARGING_AT_ONCE{ 4 };
 constexpr unsigned LVL2_POINTS{ 20'400 };
 constexpr float LVL2_ENEMIES_MOVEMENT_SPEED{ 1.0f };
 constexpr float LVL2_ENEMIES_BULLETS_SPEED{ 5.f };
+constexpr float LVL2_ENEMIES_CHANCE_TO_SHOOT{ 75.f };
 constexpr float LVL2_ENEMIES_CHARGING_SPEED{ 2.5f };
 constexpr float LVL2_SPACE_BETWEEN_ENEMIES{ 25.f };
 
+constexpr unsigned MAX_POINTS{ LVL1_ENEMIES_COUNT*LVL1_POINTS_FOR_ENEMY + LVL1_POINTS + LVL2_ENEMIES_COUNT*LVL2_POINTS_FOR_ENEMY + LVL2_POINTS };
 constexpr int SCORE_TABLE_MAX_SIZE{ 10 };
 
 constexpr float SHADOW_FRAME_TIME{ 0.05f };
