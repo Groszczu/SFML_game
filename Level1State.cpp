@@ -6,6 +6,7 @@
 #include "InteractionsHandler.hpp"
 #include <thread>
 #include "Level2State.hpp"
+#include "LivesPowerUp.hpp"
 
 namespace rstar
 {
@@ -31,6 +32,8 @@ namespace rstar
 		data_->assets.LoadTexture("Enemy dst3", ENEMY_DST3_FILEPATH);
 		data_->assets.LoadTexture("Enemy dst4", ENEMY_DST4_FILEPATH);
 
+		data_->assets.LoadTexture("Lives PowerUp", LIVES_POWERUP_FILEPATH);
+
 		data_->assets.LoadFont("Pixel Font", PIXEL_FONT_FILEPATH);
 
 		background_.setTexture(data_->assets.GetTexture("Level Background1"));
@@ -46,8 +49,11 @@ namespace rstar
 		playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
 
 		player_ = std::make_unique<PlayerShip>(data_, lvlClock_);
+
 		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, LVL1_ENEMIES_MOVEMENT_SPEED, LVL1_ENEMIES_BULLETS_SPEED, LVL1_ENEMIES_CHARGING_SPEED,
 			LVL1_ENEMIES_CHARGING_AT_ONCE, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL1_SPACE_BETWEEN_ENEMIES, lvlClock_);
+
+		powerUpShip_ = std::make_unique<LivesPowerUp>(data_, 1.f, left, 1, lvlClock_);
 
 		lvlClock_.restart();
 	}
@@ -89,10 +95,19 @@ namespace rstar
 			}
 		}
 
-		InteractionsHandler::Run(*enemies_, *player_, LVL1_POINTS_FOR_ENEMY, LVL1_ENEMIES_CHANCE_TO_SHOOT);
+		InteractionsHandler::PlayerAndEnemies(*enemies_, *player_, LVL1_POINTS_FOR_ENEMY, LVL1_ENEMIES_CHANCE_TO_SHOOT);
+		InteractionsHandler::PlayerAndPowerUp(*player_, powerUpShip_.get());
 
 		player_->Update();
 		enemies_->Update();
+		if (powerUpShip_)
+		{
+			if (powerUpShip_->IsToRemove())
+			{
+				powerUpShip_ = std::make_unique<LivesPowerUp>(data_, 1.f, right, 1, lvlClock_);
+			}
+			powerUpShip_->Update();
+		}
 
 		updateScore();
 		updateLives();
@@ -130,6 +145,7 @@ namespace rstar
 
 			player_->Draw();
 			enemies_->Draw();
+			if (powerUpShip_) { powerUpShip_->Draw(); }
 
 			data_->window.draw(scoreTxt_);
 			data_->window.draw(playerLivesTxt_);

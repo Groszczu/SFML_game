@@ -4,6 +4,7 @@
 #include "Enemy.hpp"
 #include "State.hpp"
 #include <thread>
+#include "PowerUpShip.hpp"
 
 namespace rstar
 {
@@ -52,6 +53,8 @@ namespace rstar
 
 		// enemies pointer
 		std::unique_ptr<Enemies> enemies_;
+
+		std::unique_ptr<PowerUpShip> powerUpShip_;
 
 		void updateScore();
 		void updateLives();

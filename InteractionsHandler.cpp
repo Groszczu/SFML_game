@@ -4,12 +4,18 @@
 
 namespace rstar
 {
-	void InteractionsHandler::Run(Enemies &e, PlayerShip &ship, unsigned pointsForEnemy, float enemiesChanceToShoot)
+	void InteractionsHandler::PlayerAndEnemies(Enemies &e, PlayerShip &ship, unsigned pointsForEnemy, float enemiesChanceToShoot)
 	{
 		bullets(e, ship, pointsForEnemy);
 		bodiesIntersection(e, ship, pointsForEnemy);
 		enemiesShooting(e, ship, enemiesChanceToShoot);
 	}
+
+	void InteractionsHandler::PlayerAndPowerUp(PlayerShip& ship, PowerUpShip* powerUp)
+	{
+		powerUpHit(ship, powerUp);
+	}
+
 
 	void InteractionsHandler::bullets(Enemies &e, PlayerShip &ship, unsigned pointsForEnemy)
 	{
@@ -80,4 +86,18 @@ namespace rstar
 			}
 		}
 	}
+
+	void InteractionsHandler::powerUpHit(PlayerShip& ship, PowerUpShip* powerUp)
+	{
+		if (ship.bullet_ && powerUp)
+		{
+			if (ship.bullet_->GetBounds().intersects(powerUp->GetBounds()))
+			{
+				powerUp->PowerUp(ship);
+				powerUp->isDestroyed_ = true;
+				ship.bullet_.reset(nullptr);
+			}
+		}
+	}
+
 }

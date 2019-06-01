@@ -57,7 +57,7 @@ namespace rstar
 			data_->stateMachine.SetState(std::make_unique<ScoreDisplayState>(data_, playerScore_, SCORES_FILEPATH), true);
 		}
 
-		InteractionsHandler::Run(*enemies_, *player_, LVL2_POINTS_FOR_ENEMY, LVL2_ENEMIES_CHANCE_TO_SHOOT);
+		InteractionsHandler::PlayerAndEnemies(*enemies_, *player_, LVL2_POINTS_FOR_ENEMY, LVL2_ENEMIES_CHANCE_TO_SHOOT);
 
 		player_->Update();
 		enemies_->Update();

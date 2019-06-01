@@ -82,5 +82,7 @@ const std::string ENEMY_DST2_FILEPATH{ "Resources/enemy_destroyed2.png" };
 const std::string ENEMY_DST3_FILEPATH{ "Resources/enemy_destroyed3.png" };
 const std::string ENEMY_DST4_FILEPATH{ "Resources/enemy_destroyed4.png" };
 
+const std::string LIVES_POWERUP_FILEPATH{ "Resources/lives_powerup.png" };
+
 const std::string SCORE_STATE_BACKGROUND{ "Resources/score_state_background.png" };
 const std::string SCORES_FILEPATH{ "User_data/high_score.txt" };
