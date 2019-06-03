@@ -1,6 +1,9 @@
 #include "Level2State.hpp"
 #include "ScoreDisplayState.hpp"
 #include "InteractionsHandler.hpp"
+#include "LivesPowerUp.hpp"
+#include "SpeedPowerUp.hpp"
+#include "BulletsSpeedPowerUp.hpp"
 
 namespace rstar
 {
@@ -22,6 +25,8 @@ namespace rstar
 
 		enemies_ = std::make_unique<Enemies>(data_, LVL2_ENEMIES_COUNT, LVL2_ENEMIES_MOVEMENT_SPEED, LVL2_ENEMIES_BULLETS_SPEED, LVL2_ENEMIES_CHARGING_SPEED,
 			LVL2_ENEMIES_CHARGING_AT_ONCE, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL2_SPACE_BETWEEN_ENEMIES, lvlClock_);
+
+		powerUpShip_ = nullptr;
 
 		backgroundThread_ = std::thread(&Level2State::backgroundAnimation, this);
 
@@ -63,6 +68,21 @@ namespace rstar
 
 		player_->Update();
 		enemies_->Update();
+		if (powerUpShip_)
+		{
+			if (powerUpShip_->IsToRemove())
+			{
+				powerUpShip_.reset(nullptr);
+			}
+			else
+			{
+				powerUpShip_->Update();
+			}
+		}
+		else
+		{
+			handlePowerUpsSpawning();
+		}
 
 		updateScore();
 		updateLives();
@@ -74,7 +94,7 @@ namespace rstar
 			fading_ = true;
 		}
 
-		if (enemies_->GetEnemiesCount() <= 0)
+		if (enemies_->GetEnemiesCount() <= 0 && !powerUpShip_)
 		{
 			lvlCompleteTime_ = lvlClock_.getElapsedTime().asSeconds();
 			fading_ = true;
@@ -100,6 +120,7 @@ namespace rstar
 
 			player_->Draw();
 			enemies_->Draw();
+			if (powerUpShip_) { powerUpShip_->Draw(); }
 
 			data_->window.draw(scoreTxt_);
 			data_->window.draw(playerLivesTxt_);
@@ -146,5 +167,36 @@ namespace rstar
 			playerLives_ = player_->GetLives();
 			playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
 		}
+	}
+
+	void Level2State::handlePowerUpsSpawning()
+	{
+	   if (lvlClock_.getElapsedTime().asSeconds() - powerUpsSpawnTimeOffset > LVL2_POWERUPS_SPAWN_TIME)
+	   {
+	   	auto const powerUpType = Random<int>(1, 3);
+	   	auto const powerUpMoveDirection = Random<int>(0, 1);
+
+	   	switch (powerUpType)
+	   	{
+	   	case 1:
+	   		powerUpShip_ = std::make_unique<LivesPowerUp>(data_, POWERUPS_MOVEMENT_SPEED,
+	   			powerUpMoveDirection == 0 ? DirectionX::left : DirectionX::right, LIVES_POWERUP_VALUE,
+	   			data_->assets.GetTexturesArray("Lives PowerUp"), ENEMY_ANIMATION_FRAME_TIME, lvlClock_);
+	   		break;
+	   	case 2:
+	   		powerUpShip_ = std::make_unique<SpeedPowerUp>(data_, POWERUPS_MOVEMENT_SPEED,
+	   			powerUpMoveDirection == 0 ? DirectionX::left : DirectionX::right, SPEED_POWERUP_VALUE,
+	   			data_->assets.GetTexturesArray("Speed PowerUp"), ENEMY_ANIMATION_FRAME_TIME, lvlClock_);
+	   		break;
+	   	case 3:
+	   		powerUpShip_ = std::make_unique<BulletsSpeedPowerUp>(data_, POWERUPS_MOVEMENT_SPEED,
+	   			powerUpMoveDirection == 0 ? DirectionX::left : DirectionX::right, BULLETS_SPEED_POWERUP_VALUE,
+	   			data_->assets.GetTexturesArray("Bullets Speed PowerUp"), ENEMY_ANIMATION_FRAME_TIME, lvlClock_);
+	   		break;
+	   	default:
+	   		break;
+	   	}
+	   	powerUpsSpawnTimeOffset = lvlClock_.getElapsedTime().asSeconds();
+	   }
 	}
 }

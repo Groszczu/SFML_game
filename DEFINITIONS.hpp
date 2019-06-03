@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 constexpr int WINDOW_WIDTH{ 852 };
 constexpr int WINDOW_HEIGHT{ 480 };
@@ -54,6 +55,14 @@ constexpr float PLAYER_START_BULLET_SPEED{ 5.f };
 constexpr float PLAYER_BLURRING_FRAME_TIME{ 0.2f };
 constexpr int PLAYER_BLURRING_FRAMES{ 15 };
 constexpr int PLAYER_NICK_MAX_LENGTH{ 12 };
+
+constexpr float LVL1_POWERUPS_SPAWN_TIME{ 25.f };
+constexpr float LVL2_POWERUPS_SPAWN_TIME{ 30.f };
+
+constexpr unsigned LIVES_POWERUP_VALUE{ 1 };
+constexpr unsigned SPEED_POWERUP_VALUE{ 1 };
+constexpr unsigned BULLETS_SPEED_POWERUP_VALUE{ 2 };
+constexpr float POWERUPS_MOVEMENT_SPEED{ 1.5f };
 
 const std::string SPLASH_STATE_BACKGROUND_FILEPATH{ "Resources/splash_screen_background.png" };
 

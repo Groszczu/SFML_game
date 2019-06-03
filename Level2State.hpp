@@ -5,6 +5,7 @@
 #include "Enemy.hpp"
 #include "State.hpp"
 #include <thread>
+#include "PowerUpShip.hpp"
 
 namespace rstar
 {
@@ -36,6 +37,8 @@ namespace rstar
 		sf::Clock lvlClock_;
 		float lvlCompleteTime_{ 0.f };
 
+		float powerUpsSpawnTimeOffset{ 0.f };
+
 		// bool variables to manage changing screens
 		bool initial_{ true };
 		bool fading_{ false };
@@ -49,11 +52,12 @@ namespace rstar
 		bool stopThread_{ false };
 
 		std::unique_ptr<PlayerShip> player_;
-
 		std::unique_ptr<Enemies> enemies_;
+		std::unique_ptr<PowerUpShip> powerUpShip_;
 
 		void updateScore();
 		void updateLives();
+		void handlePowerUpsSpawning();
 	};
 }
 
