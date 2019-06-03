@@ -4,7 +4,7 @@
 namespace rstar
 {
 	PowerUpShip::PowerUpShip(GameDataPtr data, float movementSpeed, DirectionX startMoveDirection, unsigned powerUpValue, 
-		std::vector<sf::Texture> textures, float frameTime, sf::Clock const& clock)
+		std::vector<sf::Texture> const& textures, float frameTime, sf::Clock const& clock)
 		: Animatable(data, textures, frameTime, clock), movementSpeed_(movementSpeed), moveDirection_(startMoveDirection), powerUpValue_(powerUpValue)
 	{
 		sprite_.setScale(2.f, 2.f);

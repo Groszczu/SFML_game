@@ -4,7 +4,7 @@
 namespace rstar
 {
 	BulletsSpeedPowerUp::BulletsSpeedPowerUp(GameDataPtr data, float movementSpeed, DirectionX startMoveDirection, unsigned speed,
-		std::vector<sf::Texture> textures, float frameTime, sf::Clock const& clock)
+		std::vector<sf::Texture> const& textures, float frameTime, sf::Clock const& clock)
 		: PowerUpShip(data, movementSpeed, startMoveDirection, speed, textures, frameTime, clock)
 	{
 	}

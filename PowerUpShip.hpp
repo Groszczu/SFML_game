@@ -9,7 +9,7 @@ namespace rstar
 	{
 	public:
 		PowerUpShip(GameDataPtr data, float movementSpeed, DirectionX startMoveDirection, unsigned powerUpValue, 
-			std::vector<sf::Texture> textures, float frameTime, sf::Clock const& clock);
+			std::vector<sf::Texture> const& textures, float frameTime, sf::Clock const& clock);
 
 		bool IsToRemove() const { return toRemove_; }
 		bool IsDestroyed() const { return isDestroyed_; }

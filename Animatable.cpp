@@ -1,13 +1,9 @@
 #include "Animatable.hpp"
-#include <utility>
-
 
 namespace rstar
 {
-	Animatable::Animatable(GameDataPtr data, std::vector<sf::Texture> texturesInOrder, float frameTime, sf::Clock const& clock)
-		: GameObject(data), textures_(std::move(texturesInOrder)), frameTime_(frameTime), clockRef_(clock)
-	{
-	}
+	Animatable::Animatable(GameDataPtr data, std::vector<sf::Texture> const& texturesInOrder, float frameTime, sf::Clock const& clock)
+		: GameObject(data), textures_(texturesInOrder), frameTime_(frameTime), clockRef_(clock) {}
 
 	void Animatable::animate()
 	{

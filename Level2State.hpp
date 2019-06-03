@@ -12,7 +12,7 @@ namespace rstar
 	class Level2State final : public State
 	{
 	public:
-		Level2State(GameDataPtr data, int playerLives, int playerScore);
+		Level2State(GameDataPtr data, int playerLives, int playerScore, float playerMovementSpeed, float playerBulletsSpeed);
 
 		Level2State(Level2State const& other) = delete;
 		Level2State(Level2State && other) = delete;

@@ -7,7 +7,7 @@ namespace rstar
 	{
 	public:
 		LivesPowerUp(GameDataPtr data, float movementSpeed, DirectionX startMoveDirection, unsigned lives, 
-			std::vector<sf::Texture> textures, float frameTime, sf::Clock const& clock);
+			std::vector<sf::Texture> const& textures, float frameTime, sf::Clock const& clock);
 
 		void PowerUp(PlayerShip& ship) override;
 		void Update() override;

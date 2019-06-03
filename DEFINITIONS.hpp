@@ -62,7 +62,7 @@ constexpr float LVL2_POWERUPS_SPAWN_TIME{ 30.f };
 constexpr unsigned LIVES_POWERUP_VALUE{ 1 };
 constexpr unsigned SPEED_POWERUP_VALUE{ 1 };
 constexpr unsigned BULLETS_SPEED_POWERUP_VALUE{ 2 };
-constexpr float POWERUPS_MOVEMENT_SPEED{ 1.5f };
+constexpr float POWERUPS_MOVEMENT_SPEED{ 1.8f };
 
 const std::string SPLASH_STATE_BACKGROUND_FILEPATH{ "Resources/splash_screen_background.png" };
 

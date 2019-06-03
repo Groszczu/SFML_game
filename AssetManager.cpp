@@ -4,12 +4,22 @@ namespace rstar
 {
 	void AssetManager::LoadTexture(std::string const& textureName, std::vector<std::string> const& filePaths)
 	{
+		// if textureName key already exists don't proceed
+		if (textures_.find(textureName) != end(textures_))
+		{
+			return;
+		}
+		
+		// otherwise create empty std::vector at given key
+		// and fill it with textures
+		textures_.emplace(textureName, std::vector<sf::Texture>{});
+
 		for (auto const& path : filePaths)
 		{
 			sf::Texture tex;
 			if (tex.loadFromFile(path))
 			{
-				textures_[textureName].emplace_back(tex);
+				textures_.at(textureName).emplace_back(tex);
 			}
 		}
 	}

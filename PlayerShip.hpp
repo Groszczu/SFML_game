@@ -16,6 +16,9 @@ namespace rstar
 		void Shoot();
 		int GetScore() const { return score_; }
 		int GetLives() const { return lives_; }
+		float GetMovementSpeed() const { return movementSpeed_; }
+		float GetBulletsSpeed() const { return bulletsSpeed_; }
+
 		void IncreaseLives(unsigned amount) { lives_ += amount; }
 		void IncreaseSpeed(unsigned amount) { movementSpeed_ += amount; }
 		void IncreaseBulletsSpeed(unsigned amount) { bulletsSpeed_ += amount; }

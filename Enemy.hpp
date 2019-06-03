@@ -16,7 +16,7 @@ namespace rstar
 	{
 	public:
 		Enemy(GameDataPtr data, sf::Vector2f startPosition,
-			std::vector<sf::Texture> textures, float frameTime, sf::Clock const& clock);
+			std::vector<sf::Texture> const& textures, float frameTime, sf::Clock const& clock);
 
 		bool IsDestroyed() const { return isDestroyed_; }
 		bool IsToRemove() const { return toRemove_; }

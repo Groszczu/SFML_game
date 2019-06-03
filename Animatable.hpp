@@ -7,10 +7,10 @@ namespace rstar
 	class Animatable : public GameObject
 	{
 	public:
-		Animatable(GameDataPtr data, std::vector<sf::Texture> texturesInOrder, float frameTime, sf::Clock const& clock);
+		Animatable(GameDataPtr data, std::vector<sf::Texture> const& texturesInOrder, float frameTime, sf::Clock const& clock);
 
 	protected:
-		std::vector<sf::Texture> const textures_;
+		std::vector<sf::Texture> const& textures_;
 		float frameTime_;
 		sf::Clock const& clockRef_;
 

@@ -14,7 +14,7 @@ namespace rstar
 
 	// Start enemy---------------------------------------------------------------------------
 	Enemy::Enemy(GameDataPtr data, sf::Vector2f startPosition,
-		std::vector<sf::Texture> textures, float frameTime, sf::Clock const& clock)
+		std::vector<sf::Texture> const& textures, float frameTime, sf::Clock const& clock)
 		: Animatable(data, textures, frameTime, clock)
 	{
 		sprite_.setScale(2.f, 2.f);
@@ -50,6 +50,12 @@ namespace rstar
 			if (GetPosition().x - ENEMIES_WIDTH < 0)
 			{
 				Enemies::MoveDirection = DirectionX::right;
+			}
+
+			if (GetPosition().y > WINDOW_HEIGHT - 3 * GetBounds().height)
+			{
+				Charge();
+				return;
 			}
 
 			moveDirection = { static_cast<int>(Enemies::MoveDirection) * Enemies::MovementSpeed, Enemies::MoveForward * Enemies::MovementSpeed };
@@ -139,7 +145,7 @@ namespace rstar
 		}
 
 		for (auto &enemy : enemies_)
-		{
+		{	
 			enemy->Update();
 		}
 
@@ -175,28 +181,32 @@ namespace rstar
 	{
 		if (!enemies_.empty())
 		{
-			for (unsigned int i = 0; i < enemiesCharging; i++)
+			while(enemiesCharging--)
 			{
-				auto const chargingEnemyIndex = Random<int>(0, GetEnemiesCount() - 1);
+				auto const chargingEnemyIndex{ Random<int>(0, GetEnemiesCount() - 1) };
 				enemies_.at(chargingEnemyIndex)->Charge();
 			}
 		}
+		
 	}
 
-	// reorder enemies to draw them in correct order`
+	// reorder enemies to draw them in correct order
+	// drawing not destroyed and not charging first
+	// then drawing charging enemies
+	// and last destroyed
 	void Enemies::reorderEnemies()
 	{
-		std::partition(begin(enemies_), end(enemies_),
+		auto const firstNotCharging = std::partition(begin(enemies_), end(enemies_),
 			[](auto const& enemy)
 			{
 				return enemy->IsCharging();
 			}
 		);
 
-		std::stable_partition(begin(enemies_), end(enemies_),
+		std::stable_partition(firstNotCharging, end(enemies_),
 			[](auto const& enemy)
 			{
-				return !enemy->IsDestroyed() && !enemy->IsCharging();
+				return !enemy->IsDestroyed();
 			}
 		);
 	}
