@@ -194,19 +194,22 @@ namespace rstar
 	// drawing not destroyed and not charging first
 	// then drawing charging enemies
 	// and last destroyed
+	// displaying order is reversed
 	void Enemies::reorderEnemies()
 	{
-		auto const firstNotCharging = std::partition(begin(enemies_), end(enemies_),
+		// put destroyed enemies on the end of std::vector (reverse iterators)
+		auto const firstNotDestroyed = std::partition(rbegin(enemies_), rend(enemies_),
 			[](auto const& enemy)
 			{
-				return enemy->IsCharging();
+				return enemy->IsDestroyed();
 			}
 		);
 
-		std::stable_partition(firstNotCharging, end(enemies_),
+		// put charging enemies just before destroyed
+		std::stable_partition(firstNotDestroyed, rend(enemies_),
 			[](auto const& enemy)
 			{
-				return !enemy->IsDestroyed();
+				return enemy->IsCharging();
 			}
 		);
 	}
