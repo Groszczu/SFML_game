@@ -10,7 +10,7 @@ namespace rstar
 	ScoreDisplayState::ScoreDisplayState(GameDataPtr data, int const playerScore, std::string fileName)
 		: data_(std::move(data)), playerScore_(playerScore), fileName_(std::move(fileName))
 	{
-		data_->assets.LoadTexture("Score state Background", SCORE_STATE_BACKGROUND);
+		data_->assets.LoadTexture("Score state Background", { SCORE_STATE_BACKGROUND });
 
 		background_.setTexture(data_->assets.GetTexture("Score state Background"));
 
@@ -175,7 +175,7 @@ namespace rstar
 
 	void ScoreDisplayState::animateTxt()
 	{
-		if (animationClock_.getElapsedTime().asSeconds() > BUTTON_ANIMATION_DURATION)
+		if (animationClock_.getElapsedTime().asSeconds() > BUTTON_ANIMATION_FRAME_TIME)
 		{
 			if (pressEnterTxt_.getFillColor() == sf::Color::Yellow)
 			{

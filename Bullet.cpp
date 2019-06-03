@@ -8,10 +8,12 @@ namespace rstar
 		if (playerBullet)
 		{
 			sprite_.setTexture(data_->assets.GetTexture("Player Bullet"));
+			direction_ = DirectionY::up;
 		}
 		else
 		{
 			sprite_.setTexture(data_->assets.GetTexture("Enemy Bullet"));
+			direction_ = DirectionY::down;
 		}
 		sprite_.setScale(3.f, 3.f);
 		sprite_.setPosition(startPosition);
@@ -19,7 +21,7 @@ namespace rstar
 
 	void BaseBullet::Bullet::Update()
 	{
-		sprite_.move({ 0.f, movementSpeed_ });
+		sprite_.move({ 0.f, static_cast<int>(direction_) * movementSpeed_ });
 	}
 
 	void BaseBullet::Bullet::Draw() const

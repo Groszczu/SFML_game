@@ -17,6 +17,8 @@ namespace rstar
 		int GetScore() const { return score_; }
 		int GetLives() const { return lives_; }
 		void IncreaseLives(unsigned amount) { lives_ += amount; }
+		void IncreaseSpeed(unsigned amount) { movementSpeed_ += amount; }
+		void IncreaseBulletsSpeed(unsigned amount) { bulletsSpeed_ += amount; }
 
 		void Update() override;
 		void Draw() const override;

@@ -7,36 +7,31 @@
 #include <thread>
 #include "Level2State.hpp"
 #include "LivesPowerUp.hpp"
+#include "BulletsSpeedPowerUp.hpp"
 
 namespace rstar
 {
 	Level1State::Level1State(GameDataPtr data)
-		: data_{ std::move(data) },
-		backgroundThread_{ std::thread(&Level1State::backgroundAnimation, this) }
+		: data_{ std::move(data) }
 	{
-		data_->assets.LoadTexture("Level Background1", LEVEL_BACKGROUND1_FILEPATH);
-		data_->assets.LoadTexture("Level Background2", LEVEL_BACKGROUND2_FILEPATH);
-		data_->assets.LoadTexture("Level Background3", LEVEL_BACKGROUND3_FILEPATH);
+		data_->assets.LoadTexture("Level Background", { LEVEL_BACKGROUND1_FILEPATH, LEVEL_BACKGROUND2_FILEPATH, LEVEL_BACKGROUND3_FILEPATH });
 
-		data_->assets.LoadTexture("Player Ship", PLAYER_SHIP_FILEPATH);
-		data_->assets.LoadTexture("Hit Player Ship", HIT_PLAYER_SHIP_FILEPATH);
-		data_->assets.LoadTexture("Player Bullet", PLAYER_BULLET_FILEPATH);
-		data_->assets.LoadTexture("Enemy Bullet", ENEMY_BULLET_FILEPATH);
+		data_->assets.LoadTexture("Player Ship", { PLAYER_SHIP_FILEPATH });
+		data_->assets.LoadTexture("Hit Player Ship", { HIT_PLAYER_SHIP_FILEPATH });
+		data_->assets.LoadTexture("Player Bullet", { PLAYER_BULLET_FILEPATH });
+		data_->assets.LoadTexture("Enemy Bullet", { ENEMY_BULLET_FILEPATH });
 
-		data_->assets.LoadTexture("Red Enemy1", RED_ENEMY1_FILEPATH);
-		data_->assets.LoadTexture("Red Enemy2", RED_ENEMY2_FILEPATH);
-		data_->assets.LoadTexture("Red Enemy3", RED_ENEMY3_FILEPATH);
+		data_->assets.LoadTexture("Red Enemy", { RED_ENEMY1_FILEPATH, RED_ENEMY2_FILEPATH, RED_ENEMY3_FILEPATH });
 
-		data_->assets.LoadTexture("Enemy dst1", ENEMY_DST1_FILEPATH);
-		data_->assets.LoadTexture("Enemy dst2", ENEMY_DST2_FILEPATH);
-		data_->assets.LoadTexture("Enemy dst3", ENEMY_DST3_FILEPATH);
-		data_->assets.LoadTexture("Enemy dst4", ENEMY_DST4_FILEPATH);
+		data_->assets.LoadTexture("Enemy dst", { ENEMY_DST1_FILEPATH, ENEMY_DST2_FILEPATH, ENEMY_DST3_FILEPATH, ENEMY_DST4_FILEPATH });
 
-		data_->assets.LoadTexture("Lives PowerUp", LIVES_POWERUP_FILEPATH);
+		data_->assets.LoadTexture("Lives PowerUp", { LIVES_POWERUP1_FILEPATH, LIVES_POWERUP2_FILEPATH, LIVES_POWERUP3_FILEPATH });
+		data_->assets.LoadTexture("Speed PowerUp", { SPEED_POWERUP1_FILEPATH, SPEED_POWERUP2_FILEPATH, SPEED_POWERUP3_FILEPATH });
+		data_->assets.LoadTexture("Bullets Speed PowerUp", { BULLETS_POWERUP1_FILEPATH, BULLETS_POWERUP2_FILEPATH, BULLETS_POWERUP3_FILEPATH });
 
 		data_->assets.LoadFont("Pixel Font", PIXEL_FONT_FILEPATH);
 
-		background_.setTexture(data_->assets.GetTexture("Level Background1"));
+		background_.setTexture(data_->assets.GetTexture("Level Background"));
 
 		scoreTxt_.setFont(data_->assets.GetFont("Pixel Font"));
 		scoreTxt_.setCharacterSize(IN_GAME_FONT_SIZE);
@@ -53,7 +48,11 @@ namespace rstar
 		enemies_ = std::make_unique<Enemies>(data_, LVL1_ENEMIES_COUNT, LVL1_ENEMIES_MOVEMENT_SPEED, LVL1_ENEMIES_BULLETS_SPEED, LVL1_ENEMIES_CHARGING_SPEED,
 			LVL1_ENEMIES_CHARGING_AT_ONCE, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL1_SPACE_BETWEEN_ENEMIES, lvlClock_);
 
-		powerUpShip_ = std::make_unique<LivesPowerUp>(data_, 1.f, left, 1, lvlClock_);
+		powerUpShip_ = std::make_unique<BulletsSpeedPowerUp>(data_, 1.f, DirectionX::left, 1,
+			data_->assets.GetTexturesArray("Speed PowerUp"),
+			ENEMY_ANIMATION_FRAME_TIME, lvlClock_);
+
+		backgroundThread_ = std::thread(&Level1State::backgroundAnimation, this);
 
 		lvlClock_.restart();
 	}
@@ -104,7 +103,10 @@ namespace rstar
 		{
 			if (powerUpShip_->IsToRemove())
 			{
-				powerUpShip_ = std::make_unique<LivesPowerUp>(data_, 1.f, right, 1, lvlClock_);
+				powerUpShip_ = std::make_unique<LivesPowerUp>(data_, 1.f, DirectionX::right, 1,
+					data_->assets.GetTexturesArray("Lives PowerUp"),
+					ENEMY_ANIMATION_FRAME_TIME, lvlClock_);
+
 			}
 			powerUpShip_->Update();
 		}
@@ -159,26 +161,14 @@ namespace rstar
 		auto localTimeOffset{ 0.f };
 		while (!stopThread_)
 		{
-			if (lvlClock_.getElapsedTime().asSeconds() - localTimeOffset > BACKGROUND_ANIMATION_DURATION)
+			if (lvlClock_.getElapsedTime().asSeconds() - localTimeOffset > BACKGROUND_ANIMATION_FRAME_TIME)
 			{
-				switch (backgroundPointer_)
+				if (backgroundCurrentTexture_ >= data_->assets.GetTexturesArray("Level Background").size())
 				{
-				case 1:
-					background_.setTexture(data_->assets.GetTexture("Level Background2"));
-					backgroundPointer_++;
-					break;
-				case 2:
-					background_.setTexture(data_->assets.GetTexture("Level Background3"));
-					backgroundPointer_++;
-					break;
-				case 3:
-					background_.setTexture(data_->assets.GetTexture("Level Background1"));
-					backgroundPointer_ = 1;
-					break;
-				default:
-					backgroundPointer_ = 1;
-					break;
+					backgroundCurrentTexture_ = 0;
 				}
+
+				background_.setTexture(data_->assets.GetTexture("Level Background", backgroundCurrentTexture_++));
 				localTimeOffset = lvlClock_.getElapsedTime().asSeconds();
 			}
 		}

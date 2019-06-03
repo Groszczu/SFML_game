@@ -1,37 +1,37 @@
 #pragma once
 #include "GameObject.hpp"
 #include "Enemy.hpp"
+#include "Animatable.hpp"
 
 namespace rstar
 {
-	class PowerUpShip : public GameObject
+	class PowerUpShip : public Animatable
 	{
 	public:
-		PowerUpShip(GameDataPtr data, float movementSpeed, Direction startMoveDirection, sf::Clock &clock);
+		PowerUpShip(GameDataPtr data, float movementSpeed, DirectionX startMoveDirection, unsigned powerUpValue, 
+			std::vector<sf::Texture> textures, float frameTime, sf::Clock const& clock);
 
 		bool IsToRemove() const { return toRemove_; }
 		bool IsDestroyed() const { return isDestroyed_; }
 
 		virtual void PowerUp(PlayerShip &ship) = 0;
 
-		void Update() override = 0;
-		void Draw() const override = 0;
+		void Update() override;
+		void Draw() const override;
 
 		friend class InteractionsHandler;
 
 	protected:
 		float movementSpeed_;
-		const Direction moveDirection_;
-		sf::Clock &clockRef_;
-
-		float baseAnimationTimeOffset_{ 0.f };
-		float destroyAnimationTimeOffset_{ 0.f };
-
-		unsigned short currentTexture_{ 1 };
-		unsigned short currentDestroyTexture_{ 0 };
+		const DirectionX moveDirection_;
+		unsigned powerUpValue_;
 
 		bool isDestroyed_{ false };
 		bool toRemove_{ false };
+
+		float destroyAnimationTimeOffset_{ 0.f };
+		unsigned short currentDestroyTexture_{ 0 };
+		void animateDestroy();
 	};
 }
 

@@ -5,10 +5,10 @@
 namespace rstar
 {
 	Level2State::Level2State(GameDataPtr data, int playerLives, int playerScore)
-		: data_(std::move(data)), playerLives_(playerLives), playerScore_(playerScore), backgroundThread_(std::thread(&Level2State::backgroundAnimation, this)),
+		: data_(std::move(data)), playerLives_(playerLives), playerScore_(playerScore),
 		player_(std::make_unique<PlayerShip>(data_, lvlClock_, playerLives_, playerScore, PLAYER_START_SPEED, PLAYER_START_BULLET_SPEED)) 
 	{
-		background_.setTexture(data_->assets.GetTexture("Level Background1"));
+		background_.setTexture(data_->assets.GetTexture("Level Background"));
 
 		scoreTxt_.setFont(data_->assets.GetFont("Pixel Font"));
 		scoreTxt_.setCharacterSize(IN_GAME_FONT_SIZE);
@@ -22,6 +22,8 @@ namespace rstar
 
 		enemies_ = std::make_unique<Enemies>(data_, LVL2_ENEMIES_COUNT, LVL2_ENEMIES_MOVEMENT_SPEED, LVL2_ENEMIES_BULLETS_SPEED, LVL2_ENEMIES_CHARGING_SPEED,
 			LVL2_ENEMIES_CHARGING_AT_ONCE, sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL2_SPACE_BETWEEN_ENEMIES, lvlClock_);
+
+		backgroundThread_ = std::thread(&Level2State::backgroundAnimation, this);
 
 		lvlClock_.restart();
 	}
@@ -111,26 +113,14 @@ namespace rstar
 		auto localTimeOffset{ 0.f };
 		while (!stopThread_)
 		{
-			if (lvlClock_.getElapsedTime().asSeconds() - localTimeOffset > BACKGROUND_ANIMATION_DURATION)
+			if (lvlClock_.getElapsedTime().asSeconds() - localTimeOffset > BACKGROUND_ANIMATION_FRAME_TIME)
 			{
-				switch (backgroundPointer_)
+				if (backgroundCurrentTexture_ >= data_->assets.GetTexturesArray("Level Background").size())
 				{
-				case 1:
-					background_.setTexture(data_->assets.GetTexture("Level Background2"));
-					backgroundPointer_++;
-					break;
-				case 2:
-					background_.setTexture(data_->assets.GetTexture("Level Background3"));
-					backgroundPointer_++;
-					break;
-				case 3:
-					background_.setTexture(data_->assets.GetTexture("Level Background1"));
-					backgroundPointer_ = 1;
-					break;
-				default:
-					backgroundPointer_ = 1;
-					break;
+					backgroundCurrentTexture_ = 0;
 				}
+
+				background_.setTexture(data_->assets.GetTexture("Level Background", backgroundCurrentTexture_++));
 				localTimeOffset = lvlClock_.getElapsedTime().asSeconds();
 			}
 		}

@@ -37,10 +37,10 @@ constexpr unsigned MAX_POINTS{ LVL1_ENEMIES_COUNT*LVL1_POINTS_FOR_ENEMY + LVL1_P
 constexpr int SCORE_TABLE_MAX_SIZE{ 10 };
 
 constexpr float SHADOW_FRAME_TIME{ 0.05f };
-constexpr float BUTTON_ANIMATION_DURATION{ 0.7f };
-constexpr float BACKGROUND_ANIMATION_DURATION{ 0.5f };
-constexpr float ENEMY_ANIMATION_DURATION{ 0.15f };
-constexpr float BOOM_ANIMATION_DURATION{ 0.1f };
+constexpr float BUTTON_ANIMATION_FRAME_TIME{ 0.7f };
+constexpr float BACKGROUND_ANIMATION_FRAME_TIME{ 0.5f };
+constexpr float ENEMY_ANIMATION_FRAME_TIME{ 0.15f };
+constexpr float BOOM_ANIMATION_FRAME_TIME{ 0.1f };
 
 constexpr float ENEMIES_SHOT_DELAY{ 0.8f };
 constexpr float ENEMIES_WIDTH{ 32.f };
@@ -50,7 +50,7 @@ constexpr float ENEMIES_SIDE_MARGIN{ 150.f };
 
 constexpr unsigned PLAYER_LIVES{ 3 };
 constexpr float PLAYER_START_SPEED{ 2.5f };
-constexpr float PLAYER_START_BULLET_SPEED{ -5.f };
+constexpr float PLAYER_START_BULLET_SPEED{ 5.f };
 constexpr float PLAYER_BLURRING_FRAME_TIME{ 0.2f };
 constexpr int PLAYER_BLURRING_FRAMES{ 15 };
 constexpr int PLAYER_NICK_MAX_LENGTH{ 12 };
@@ -82,7 +82,17 @@ const std::string ENEMY_DST2_FILEPATH{ "Resources/enemy_destroyed2.png" };
 const std::string ENEMY_DST3_FILEPATH{ "Resources/enemy_destroyed3.png" };
 const std::string ENEMY_DST4_FILEPATH{ "Resources/enemy_destroyed4.png" };
 
-const std::string LIVES_POWERUP_FILEPATH{ "Resources/lives_powerup.png" };
+const std::string LIVES_POWERUP1_FILEPATH{ "Resources/lives_powerup1.png" };
+const std::string LIVES_POWERUP2_FILEPATH{ "Resources/lives_powerup2.png" };
+const std::string LIVES_POWERUP3_FILEPATH{ "Resources/lives_powerup3.png" };
+
+const std::string SPEED_POWERUP1_FILEPATH{ "Resources/speed_powerup1.png" };
+const std::string SPEED_POWERUP2_FILEPATH{ "Resources/speed_powerup2.png" };
+const std::string SPEED_POWERUP3_FILEPATH{ "Resources/speed_powerup3.png" };
+
+const std::string BULLETS_POWERUP1_FILEPATH{ "Resources/bullets_powerup1.png" };
+const std::string BULLETS_POWERUP2_FILEPATH{ "Resources/bullets_powerup2.png" };
+const std::string BULLETS_POWERUP3_FILEPATH{ "Resources/bullets_powerup3.png" };
 
 const std::string SCORE_STATE_BACKGROUND{ "Resources/score_state_background.png" };
 const std::string SCORES_FILEPATH{ "User_data/high_score.txt" };

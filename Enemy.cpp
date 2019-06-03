@@ -6,72 +6,35 @@
 
 namespace rstar
 {
-	Direction Enemies::MoveDirection{};
+	DirectionX Enemies::MoveDirection{};
 	float Enemies::MovementSpeed{};
 	bool Enemies::MoveForward{};
 	float Enemies::BulletsSpeed{};
 	float Enemies::ChargingSpeed{};
 
 	// Start enemy---------------------------------------------------------------------------
-	Enemy::Enemy(GameDataPtr data, sf::Vector2f startPosition, sf::Clock &clock)
-		: GameObject(data), clockRef_(clock)
+	Enemy::Enemy(GameDataPtr data, sf::Vector2f startPosition,
+		std::vector<sf::Texture> textures, float frameTime, sf::Clock const& clock)
+		: Animatable(data, textures, frameTime, clock)
 	{
-		SetTexture(data_->assets.GetTexture("Red Enemy1"));
 		sprite_.setScale(2.f, 2.f);
 		sprite_.setRotation(180);
 		sprite_.setPosition(startPosition);
 	}
 
-	void Enemy::animate()
-	{
-		if (clockRef_.getElapsedTime().asSeconds() - baseAnimationTimeOffset_ > ENEMY_ANIMATION_DURATION)
-		{
-			switch (currentTexture_)
-			{
-			case 1: SetTexture(data_->assets.GetTexture("Red Enemy2"));
-				++currentTexture_;
-				break;
-			case 2: SetTexture(data_->assets.GetTexture("Red Enemy3"));
-				++currentTexture_;
-				break;
-			case 3: SetTexture(data_->assets.GetTexture("Red Enemy2"));
-				++currentTexture_;
-				break;
-			case 4: SetTexture(data_->assets.GetTexture("Red Enemy1"));
-				currentTexture_ = 1;
-				break;
-			default:
-				break;
-			}
-			baseAnimationTimeOffset_ = clockRef_.getElapsedTime().asSeconds();
-		}
-	}
-
 	void Enemy::animateDestroy()
 	{
-		if (clockRef_.getElapsedTime().asSeconds() - destroyAnimationTimeOffset_ > BOOM_ANIMATION_DURATION)
+		if (clockRef_.getElapsedTime().asSeconds() - destroyAnimationTimeOffset_ > BOOM_ANIMATION_FRAME_TIME)
 		{
-			switch (currentDestroyTexture_)
+			if (currentDestroyTexture_ < data_->assets.GetTexturesArray("Enemy dst").size())
 			{
-			case 0: SetTexture(data_->assets.GetTexture("Enemy dst1"));
-				++currentDestroyTexture_;
-				break;
-			case 1: SetTexture(data_->assets.GetTexture("Enemy dst2"));
-				++currentDestroyTexture_;
-				break;
-			case 2: SetTexture(data_->assets.GetTexture("Enemy dst3"));
-				++currentDestroyTexture_;
-				break;
-			case 3: SetTexture(data_->assets.GetTexture("Enemy dst4"));
-				++currentDestroyTexture_;
-				break;
-			case 4:
-				toRemove_ = true;
-				break;
-			default:
-				break;
+				SetTexture(data_->assets.GetTexture("Enemy dst", currentDestroyTexture_++));
+				destroyAnimationTimeOffset_ = clockRef_.getElapsedTime().asSeconds();
 			}
-			destroyAnimationTimeOffset_ = clockRef_.getElapsedTime().asSeconds();
+			else
+			{
+				toRemove_ = true;
+			}		
 		}
 	}
 
@@ -82,19 +45,19 @@ namespace rstar
 		{
 			if (GetPosition().x > WINDOW_WIDTH)
 			{
-				Enemies::MoveDirection = left;
+				Enemies::MoveDirection = DirectionX::left;
 			}
 			if (GetPosition().x - ENEMIES_WIDTH < 0)
 			{
-				Enemies::MoveDirection = right;
+				Enemies::MoveDirection = DirectionX::right;
 			}
 
-			moveDirection = { Enemies::MoveDirection * Enemies::MovementSpeed, Enemies::MoveForward * Enemies::MovementSpeed };
+			moveDirection = { static_cast<int>(Enemies::MoveDirection) * Enemies::MovementSpeed, Enemies::MoveForward * Enemies::MovementSpeed };
 
 		}
 		else
 		{
-			moveDirection = { Enemies::MoveDirection * Enemies::MovementSpeed, Enemies::ChargingSpeed };
+			moveDirection = { static_cast<int>(Enemies::MoveDirection) * Enemies::MovementSpeed, Enemies::ChargingSpeed };
 		}
 		sprite_.move(moveDirection);
 	}
@@ -135,11 +98,12 @@ namespace rstar
 
 				firstEnemyPos.x += ENEMIES_WIDTH + space;
 
-				return std::make_unique<Enemy>(data_, firstEnemyPos, lvlClockRef_);
+				return std::make_unique<Enemy>(data_, firstEnemyPos,
+					data_->assets.GetTexturesArray("Red Enemy"), ENEMY_ANIMATION_FRAME_TIME, lvlClockRef_);
 			}
 			);
 
-		MoveDirection = right;
+		MoveDirection = DirectionX::right;
 		MovementSpeed = movementSpeed;
 		BulletsSpeed = bulletsSpeed;
 		ChargingSpeed = chargingSpeed;

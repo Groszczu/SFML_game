@@ -41,17 +41,15 @@ namespace rstar
 		bool fading_{ false };
 
 		// it's value is equal to index number of background image displayed currently (animating background) 
-		int backgroundPointer_{ 1 };
+		unsigned backgroundCurrentTexture_{ 0 };
 
 		// animating background thread
 		std::thread backgroundThread_;
 		void backgroundAnimation();
 		bool stopThread_{ false };
 
-		// player ship pointer
 		std::unique_ptr<PlayerShip> player_;
 
-		// enemies pointer
 		std::unique_ptr<Enemies> enemies_;
 
 		std::unique_ptr<PowerUpShip> powerUpShip_;

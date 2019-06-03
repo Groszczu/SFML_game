@@ -3,10 +3,10 @@
 
 namespace rstar
 {
-	class LivesPowerUp : public PowerUpShip
+	class SpeedPowerUp : public PowerUpShip
 	{
 	public:
-		LivesPowerUp(GameDataPtr data, float movementSpeed, DirectionX startMoveDirection, unsigned lives, 
+		SpeedPowerUp(GameDataPtr data, float movementSpeed, DirectionX startMoveDirection,  unsigned speed,
 			std::vector<sf::Texture> textures, float frameTime, sf::Clock const& clock);
 
 		void PowerUp(PlayerShip& ship) override;
@@ -14,4 +14,3 @@ namespace rstar
 		void Draw() const override;
 	};
 }
-

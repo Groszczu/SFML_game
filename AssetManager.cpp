@@ -2,19 +2,28 @@
 
 namespace rstar
 {
-	void AssetManager::LoadTexture(std::string const& textureName, std::string const& filePath)
+	void AssetManager::LoadTexture(std::string const& textureName, std::vector<std::string> const& filePaths)
 	{
-		sf::Texture tex;
-		if (tex.loadFromFile(filePath))
+		for (auto const& path : filePaths)
 		{
-			textures_.emplace(textureName, tex);
+			sf::Texture tex;
+			if (tex.loadFromFile(path))
+			{
+				textures_[textureName].emplace_back(tex);
+			}
 		}
 	}
 
-	sf::Texture& AssetManager::GetTexture(std::string const& textureName)
+	const sf::Texture& AssetManager::GetTexture(std::string const& textureName, unsigned textureNumber) const
 	{
-		return textures_.at(textureName);
+		return textures_.at(textureName).at(textureNumber);
 	}
+
+	const std::vector<sf::Texture>& AssetManager::GetTexturesArray(std::string const& texturesName) const
+	{
+		return textures_.at(texturesName);
+	}
+
 
 	void AssetManager::LoadFont(std::string const& fontName, std::string const& filePath)
 	{
@@ -25,7 +34,7 @@ namespace rstar
 		}
 	}
 
-	sf::Font& AssetManager::GetFont(std::string const& fontName)
+	const sf::Font& AssetManager::GetFont(std::string const& fontName) const
 	{
 		return fonts_.at(fontName);
 	}

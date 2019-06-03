@@ -7,9 +7,9 @@ namespace rstar
 {
 	SplashState::SplashState(GameDataPtr data) : data_(std::move(data))
 	{
-		data_->assets.LoadTexture("Splash State Background", SPLASH_STATE_BACKGROUND_FILEPATH);
-		data_->assets.LoadTexture("Start Button", START_BUTTON_FILEPATH);
-		data_->assets.LoadTexture("Start Button Pressed", START_BUTTON_PRESSED_FILEPATH);
+		data_->assets.LoadTexture("Splash State Background", { SPLASH_STATE_BACKGROUND_FILEPATH });
+		data_->assets.LoadTexture("Start Button", { START_BUTTON_FILEPATH });
+		data_->assets.LoadTexture("Start Button Pressed", { START_BUTTON_PRESSED_FILEPATH });
 		
 		// setting sprites
 		background_.setTexture(data_->assets.GetTexture("Splash State Background"));
@@ -87,11 +87,11 @@ namespace rstar
 		{
 			startButton_.setTexture(data_->assets.GetTexture("Start Button Pressed"));
 		}
-		else if (clock_.getElapsedTime().asSeconds() > BUTTON_ANIMATION_DURATION && clock_.getElapsedTime().asSeconds() < 2 * BUTTON_ANIMATION_DURATION)
+		else if (clock_.getElapsedTime().asSeconds() > BUTTON_ANIMATION_FRAME_TIME && clock_.getElapsedTime().asSeconds() < 2 * BUTTON_ANIMATION_FRAME_TIME)
 		{
 			startButton_.setTexture(data_->assets.GetTexture("Start Button Pressed"));
 		}
-		else if (clock_.getElapsedTime().asSeconds() > 2 * BUTTON_ANIMATION_DURATION)
+		else if (clock_.getElapsedTime().asSeconds() > 2 * BUTTON_ANIMATION_FRAME_TIME)
 		{
 			startButton_.setTexture(data_->assets.GetTexture("Start Button"));
 			clock_.restart();
