@@ -90,7 +90,7 @@ namespace rstar
 
 	// Start enemies-----------------------------------------------------------------------
 	Enemies::Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed, unsigned enemiesCharging,
-		sf::Vector2f firstEnemyPos, float space, sf::Clock &lvlClockRef)
+		sf::Vector2f firstEnemyPos, float space, sf::Clock const& lvlClockRef)
 		: data_(std::move(data)), lvlClockRef_(lvlClockRef), enemiesCount_(enemiesCount), enemiesCharging_(enemiesCharging)
 	{
 		std::generate_n(std::back_inserter(enemies_), enemiesCount,

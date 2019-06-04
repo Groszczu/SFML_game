@@ -46,7 +46,7 @@ namespace rstar
 	{
 	public:
 		Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed, unsigned enemiesCharging,
-			sf::Vector2f firstEnemyPos, float space, sf::Clock &lvlClockRef);
+			sf::Vector2f firstEnemyPos, float space, sf::Clock const& lvlClockRef);
 
 		unsigned int GetEnemiesCount() const { return enemiesCount_; }
 		void Shoot(sf::Vector2f const& startPosition);
@@ -64,7 +64,7 @@ namespace rstar
 
 	private:
 		GameDataPtr data_;
-		sf::Clock &lvlClockRef_;
+		sf::Clock const& lvlClockRef_;
 
 		std::vector<std::unique_ptr<Enemy>> enemies_;
 		std::vector<std::unique_ptr<Bullet>> bullets_;
