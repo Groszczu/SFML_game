@@ -3,6 +3,7 @@
 #include "Enemy.hpp"
 #include <algorithm>
 #include <utility>
+#include "Boss.hpp"
 
 namespace rstar
 {
@@ -13,10 +14,11 @@ namespace rstar
 	float Enemies::ChargingSpeed{};
 
 	// Start enemy---------------------------------------------------------------------------
-	Enemy::Enemy(GameDataPtr data, sf::Vector2f startPosition,
-		std::vector<sf::Texture> const& textures, float frameTime, sf::Clock const& clock)
-		: Animatable(data, textures, frameTime, clock)
+	Enemy::Enemy(GameDataPtr data, std::vector<sf::Texture> const& textures, sf::Vector2f startPosition, unsigned lives,
+		float frameTime, sf::Clock const& clock)
+		: Animatable(data, textures, frameTime, clock), lives_(lives)
 	{
+		updateTextures();
 		sprite_.setScale(2.f, 2.f);
 		sprite_.setRotation(180);
 		sprite_.setPosition(startPosition);
@@ -41,17 +43,18 @@ namespace rstar
 	void Enemy::handleMovement()
 	{
 		sf::Vector2f moveDirection;
+
+		if (GetPosition().x > WINDOW_WIDTH)
+		{
+			Enemies::MoveDirection = DirectionX::left;
+		}
+		if (GetPosition().x - GetBounds().width < 0)
+		{
+			Enemies::MoveDirection = DirectionX::right;
+		}
+
 		if (!isCharging_)
 		{
-			if (GetPosition().x > WINDOW_WIDTH)
-			{
-				Enemies::MoveDirection = DirectionX::left;
-			}
-			if (GetPosition().x - ENEMIES_WIDTH < 0)
-			{
-				Enemies::MoveDirection = DirectionX::right;
-			}
-
 			if (GetPosition().y > WINDOW_HEIGHT - 3 * GetBounds().height)
 			{
 				Charge();
@@ -76,10 +79,34 @@ namespace rstar
 		}
 		else
 		{
+			if (hit_)
+			{
+				updateTextures();
+			}
 			animate();
 			handleMovement();
 		}
 	}
+
+	void Enemy::updateTextures()
+	{
+		switch (GetLives())
+		{
+		case 1:
+			ChangeTextures(data_->assets.GetTexturesArray("Red Enemy"));
+			break;
+		case 2:
+			ChangeTextures(data_->assets.GetTexturesArray("Blue Enemy"));
+			break;
+		case 3:
+			ChangeTextures(data_->assets.GetTexturesArray("Boss"));
+			break;
+		default:
+			ChangeTextures(data_->assets.GetTexturesArray("Boss"));
+			break;
+		}
+	}
+
 
 	void Enemy::Draw() const
 	{
@@ -90,7 +117,7 @@ namespace rstar
 
 	// Start enemies-----------------------------------------------------------------------
 	Enemies::Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed, unsigned enemiesCharging,
-		sf::Vector2f firstEnemyPos, float space, sf::Clock const& lvlClockRef)
+		unsigned enemiesLives, sf::Vector2f firstEnemyPos, float space, sf::Clock const& lvlClockRef, bool boss)
 		: data_(std::move(data)), lvlClockRef_(lvlClockRef), enemiesCount_(enemiesCount), enemiesCharging_(enemiesCharging)
 	{
 		std::generate_n(std::back_inserter(enemies_), enemiesCount,
@@ -104,10 +131,18 @@ namespace rstar
 
 				firstEnemyPos.x += ENEMIES_WIDTH + space;
 
-				return std::make_unique<Enemy>(data_, firstEnemyPos,
-					data_->assets.GetTexturesArray("Red Enemy"), ENEMY_ANIMATION_FRAME_TIME, lvlClockRef_);
+				return std::make_unique<Enemy>(data_, data_->assets.GetTexturesArray("Red Enemy"), firstEnemyPos, enemiesLives, 
+					ENEMY_ANIMATION_FRAME_TIME, lvlClockRef_);
 			}
 			);
+
+		if (boss)
+		{
+			enemies_.emplace_back(std::make_unique<Boss>(data_, data_->assets.GetTexturesArray("Boss"),
+				sf::Vector2f{ WINDOW_WIDTH / 2.f + 0.9f * ENEMIES_WIDTH, 4*ENEMIES_HEIGHT }, BOSS_LIVES,
+				ENEMY_ANIMATION_FRAME_TIME, lvlClockRef_));
+			++enemiesCount_;
+		}
 
 		MoveDirection = DirectionX::right;
 		MovementSpeed = movementSpeed;
@@ -132,13 +167,13 @@ namespace rstar
 
 	void Enemies::Update()
 	{
-		if (lvlClockRef_.getElapsedTime().asSeconds() - moveForwardTimeOffset_ > LVL1_ENEMIES_MOVE_FORWARD_TIME && !MoveForward)
+		if (lvlClockRef_.getElapsedTime().asSeconds() - moveForwardTimeOffset_ > ENEMIES_MOVE_FORWARD_TIME && !MoveForward)
 		{
 			MoveForward = true;
 			moveForwardTimeOffset_ = lvlClockRef_.getElapsedTime().asSeconds();
 			handleCharging(enemiesCharging_);
 		}
-		if (MoveForward && lvlClockRef_.getElapsedTime().asSeconds() - moveForwardTimeOffset_ > LVL1_ENEMIES_MOVE_FORWARD_DURATION)
+		if (MoveForward && lvlClockRef_.getElapsedTime().asSeconds() - moveForwardTimeOffset_ > ENEMIES_MOVE_FORWARD_DURATION)
 		{
 			MoveForward = false;
 			moveForwardTimeOffset_ = lvlClockRef_.getElapsedTime().asSeconds();
@@ -183,8 +218,7 @@ namespace rstar
 		{
 			while(enemiesCharging--)
 			{
-				auto const chargingEnemyIndex{ Random<int>(0, GetEnemiesCount() - 1) };
-				enemies_.at(chargingEnemyIndex)->Charge();
+				enemies_.at(Random<int>(0, GetEnemiesCount() - 1))->Charge();
 			}
 		}
 		
@@ -193,7 +227,7 @@ namespace rstar
 	// reorder enemies to draw them in correct order
 	// drawing not destroyed and not charging first
 	// then drawing charging enemies
-	// and last destroyed
+	// and then destroyed
 	// displaying order is reversed
 	void Enemies::reorderEnemies()
 	{

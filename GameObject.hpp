@@ -18,10 +18,9 @@ namespace rstar
 		// sets new GameObject's sprite texture
 		void SetTexture(sf::Texture const& texture);
 
-		// pure virtual function
 		virtual void Update() = 0;
-		// pure virtual function
 		virtual void Draw() const = 0;
+
 	public:
 		sf::FloatRect GetBounds() const { return sprite_.getGlobalBounds(); }
 		sf::Vector2f GetPosition() const { return sprite_.getPosition(); }

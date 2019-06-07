@@ -11,20 +11,30 @@ constexpr int IN_GAME_FONT_SIZE{ 12 };
 constexpr int MENU_FONT_SIZE{ 18 };
 constexpr int SCORE_TABLE_FONT_SIZE{ 14 };
 
-constexpr unsigned LVL1_ENEMIES_COUNT{ 52 };
+constexpr float ENEMIES_SHOT_DELAY{ 0.8f };
+constexpr float ENEMIES_WIDTH{ 32.f };
+constexpr float ENEMIES_HEIGHT{ 32.f };
+constexpr float ENEMIES_MOVE_FORWARD_TIME{ 10.f };
+constexpr float ENEMIES_MOVE_FORWARD_DURATION{ 0.8f };
+constexpr float ENEMIES_START_SHOOT_DELAY{ 5.f };
+constexpr float ENEMIES_TOP_MARGIN{ 50.f };
+constexpr float ENEMIES_SIDE_MARGIN{ 150.f };
+
+constexpr unsigned BOSS_LIVES{ 50 };
+
+constexpr unsigned LVL1_ENEMIES_COUNT{ 0 };
+constexpr unsigned LVL1_ENEMIES_LIVES{ 1 };
 constexpr unsigned LVL1_POINTS_FOR_ENEMY{ 30 };
 constexpr unsigned LVL1_ENEMIES_CHARGING_AT_ONCE{ 3 };
 constexpr unsigned LVL1_POINTS{ 14'400 };
 constexpr float LVL1_ENEMIES_MOVEMENT_SPEED{ 1.2f };
-constexpr float LVL1_ENEMIES_MOVE_FORWARD_TIME{ 10.f };
-constexpr float LVL1_ENEMIES_MOVE_FORWARD_DURATION{ 0.8f };
 constexpr float LVL1_ENEMIES_BULLETS_SPEED{ 4.f };
 constexpr float LVL1_ENEMIES_CHANCE_TO_SHOOT{ 50.f };
-constexpr float LVL1_ENEMIES_START_SHOOT_DELAY{ 5.f };
 constexpr float LVL1_ENEMIES_CHARGING_SPEED{ 2.2f };
 constexpr float LVL1_SPACE_BETWEEN_ENEMIES{ 10.f };
 
-constexpr unsigned LVL2_ENEMIES_COUNT{ 40 };
+constexpr unsigned LVL2_ENEMIES_COUNT{ 0 };
+constexpr unsigned LVL2_ENEMIES_LIVES{ 2 };
 constexpr unsigned LVL2_POINTS_FOR_ENEMY{ 45 };
 constexpr unsigned LVL2_ENEMIES_CHARGING_AT_ONCE{ 4 };
 constexpr unsigned LVL2_POINTS{ 20'400 };
@@ -34,7 +44,21 @@ constexpr float LVL2_ENEMIES_CHANCE_TO_SHOOT{ 75.f };
 constexpr float LVL2_ENEMIES_CHARGING_SPEED{ 2.5f };
 constexpr float LVL2_SPACE_BETWEEN_ENEMIES{ 25.f };
 
-constexpr unsigned MAX_POINTS{ LVL1_ENEMIES_COUNT*LVL1_POINTS_FOR_ENEMY + LVL1_POINTS + LVL2_ENEMIES_COUNT*LVL2_POINTS_FOR_ENEMY + LVL2_POINTS };
+constexpr unsigned LVL3_ENEMIES_COUNT{ 6 };
+constexpr unsigned LVL3_ENEMIES_LIVES{ 3 };
+constexpr unsigned LVL3_POINTS_FOR_ENEMY{ 150 };
+constexpr unsigned LVL3_ENEMIES_CHARGING_AT_ONCE{ 0 };
+constexpr unsigned LVL3_POINTS{ 60'400 };
+constexpr float LVL3_ENEMIES_MOVEMENT_SPEED{ 1.0f };
+constexpr float LVL3_ENEMIES_BULLETS_SPEED{ 6.f };
+constexpr float LVL3_ENEMIES_CHANCE_TO_SHOOT{ 100.f };
+constexpr float LVL3_ENEMIES_CHARGING_SPEED{ 3.5f };
+constexpr float LVL3_SPACE_BETWEEN_ENEMIES{ 50.f };
+
+constexpr unsigned MAX_POINTS{ 
+	LVL1_ENEMIES_COUNT*LVL1_POINTS_FOR_ENEMY + LVL1_POINTS +
+	LVL2_ENEMIES_COUNT*LVL2_POINTS_FOR_ENEMY + LVL2_POINTS +
+	LVL3_ENEMIES_COUNT*LVL3_POINTS_FOR_ENEMY + LVL3_POINTS };
 constexpr int SCORE_TABLE_MAX_SIZE{ 10 };
 
 constexpr float SHADOW_FRAME_TIME{ 0.05f };
@@ -42,12 +66,6 @@ constexpr float BUTTON_ANIMATION_FRAME_TIME{ 0.7f };
 constexpr float BACKGROUND_ANIMATION_FRAME_TIME{ 0.5f };
 constexpr float ENEMY_ANIMATION_FRAME_TIME{ 0.15f };
 constexpr float BOOM_ANIMATION_FRAME_TIME{ 0.1f };
-
-constexpr float ENEMIES_SHOT_DELAY{ 0.8f };
-constexpr float ENEMIES_WIDTH{ 32.f };
-constexpr float ENEMIES_HEIGHT{ 32.f };
-constexpr float ENEMIES_TOP_MARGIN{ 50.f };
-constexpr float ENEMIES_SIDE_MARGIN{ 150.f };
 
 constexpr unsigned PLAYER_LIVES{ 3 };
 constexpr float PLAYER_START_SPEED{ 2.5f };
@@ -58,6 +76,7 @@ constexpr int PLAYER_NICK_MAX_LENGTH{ 12 };
 
 constexpr float LVL1_POWERUPS_SPAWN_TIME{ 25.f };
 constexpr float LVL2_POWERUPS_SPAWN_TIME{ 30.f };
+constexpr float LVL3_POWERUPS_SPAWN_TIME{ 20.f };
 
 constexpr unsigned LIVES_POWERUP_VALUE{ 1 };
 constexpr unsigned SPEED_POWERUP_VALUE{ 1 };
@@ -85,6 +104,12 @@ const std::string ENEMY_BULLET_FILEPATH{ "Resources/enemy_bullet.png" };
 const std::string RED_ENEMY1_FILEPATH{ "Resources/red_enemy1.png" };
 const std::string RED_ENEMY2_FILEPATH{ "Resources/red_enemy2.png" };
 const std::string RED_ENEMY3_FILEPATH{ "Resources/red_enemy3.png" };
+
+const std::string BLUE_ENEMY1_FILEPATH{ "Resources/blue_enemy1.png" };
+const std::string BLUE_ENEMY2_FILEPATH{ "Resources/blue_enemy2.png" };
+const std::string BLUE_ENEMY3_FILEPATH{ "Resources/blue_enemy3.png" };
+
+const std::string BOSS_FILEPATH{ "Resources/boss.png" };
 
 const std::string ENEMY_DST1_FILEPATH{ "Resources/enemy_destroyed1.png" };
 const std::string ENEMY_DST2_FILEPATH{ "Resources/enemy_destroyed2.png" };

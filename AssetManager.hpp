@@ -9,16 +9,13 @@ namespace rstar
 	class AssetManager
 	{
 	public:
-		AssetManager() = default;
-		~AssetManager() = default;
-
 		// function loading texture to the texture map and setting its 'key'
 		void LoadTexture(std::string const& textureName, std::vector<std::string> const& filePaths);
 
 		// function giving access to the specific texture from the texture map
 		// [if 'key' is correct]
 		const sf::Texture& GetTexture(std::string const& textureName, unsigned textureNumber = 0) const;
-		const std::vector<sf::Texture>& GetTexturesArray(std::string const& texturesName) const;
+		const std::vector<sf::Texture>& GetTexturesArray(std::string const& texturesName);
 
 		// function loading font to the font map and setting its 'key'
 		void LoadFont(std::string const& fontName, std::string const& filePath);

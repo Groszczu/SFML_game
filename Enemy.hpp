@@ -12,41 +12,46 @@ namespace rstar
 		right = 1
 	};
 
-		class Enemy : public Animatable
+	class Enemy : public Animatable
 	{
 	public:
-		Enemy(GameDataPtr data, sf::Vector2f startPosition,
-			std::vector<sf::Texture> const& textures, float frameTime, sf::Clock const& clock);
+		Enemy(GameDataPtr data, std::vector<sf::Texture> const& textures, sf::Vector2f startPosition, unsigned lives,
+			float frameTime, sf::Clock const& clock);
 
 		bool IsDestroyed() const { return isDestroyed_; }
 		bool IsToRemove() const { return toRemove_; }
 		bool IsCharging() const { return isCharging_; }
 		void Charge() { isCharging_ = true; }
-
+		unsigned GetLives() const { return lives_; }
 
 		void Update() override;
 		void Draw() const override;
 
 		friend class InteractionsHandler;
 
-	private:
+	protected:
+		unsigned lives_;
+
 		bool isDestroyed_{ false };
 		bool toRemove_{ false };
 		bool isCharging_{ false };
+		bool hit_{ false };
 
 		float destroyAnimationTimeOffset_{ 0.f };
 
 		unsigned short currentDestroyTexture_{ 0 };
 
 		void animateDestroy();
-		void handleMovement();
+		void updateTextures();
+		virtual void handleMovement();
 	};
 
 	class Enemies : public BaseBullet
 	{
 	public:
-		Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed, unsigned enemiesCharging,
-			sf::Vector2f firstEnemyPos, float space, sf::Clock const& lvlClockRef);
+		Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed,
+			float bulletsSpeed, float chargingSpeed, unsigned enemiesCharging,
+			unsigned enemiesLives, sf::Vector2f firstEnemyPos, float space, sf::Clock const& lvlClockRef, bool boss = false);
 
 		unsigned int GetEnemiesCount() const { return enemiesCount_; }
 		void Shoot(sf::Vector2f const& startPosition);
@@ -68,7 +73,7 @@ namespace rstar
 
 		std::vector<std::unique_ptr<Enemy>> enemies_;
 		std::vector<std::unique_ptr<Bullet>> bullets_;
-		unsigned int enemiesCount_;
+		unsigned enemiesCount_;
 
 		const unsigned enemiesCharging_;
 

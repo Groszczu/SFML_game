@@ -15,7 +15,7 @@ namespace rstar
 		
 		void Shoot();
 		int GetScore() const { return score_; }
-		int GetLives() const { return lives_; }
+		unsigned GetLives() const { return lives_; }
 		float GetMovementSpeed() const { return movementSpeed_; }
 		float GetBulletsSpeed() const { return bulletsSpeed_; }
 
@@ -31,7 +31,7 @@ namespace rstar
 	private:
 		sf::Clock &clockRef_;
 
-		int lives_{ PLAYER_LIVES };
+		unsigned lives_{ PLAYER_LIVES };
 		int score_{ 0 };
 
 		float movementSpeed_{ PLAYER_START_SPEED };

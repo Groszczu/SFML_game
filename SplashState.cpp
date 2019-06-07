@@ -7,6 +7,8 @@ namespace rstar
 {
 	SplashState::SplashState(GameDataPtr data) : data_(std::move(data))
 	{
+		data_->assets.LoadTexture("Level Background", { LEVEL_BACKGROUND1_FILEPATH, LEVEL_BACKGROUND2_FILEPATH, LEVEL_BACKGROUND3_FILEPATH });
+
 		data_->assets.LoadTexture("Splash State Background", { SPLASH_STATE_BACKGROUND_FILEPATH });
 		data_->assets.LoadTexture("Start Button", { START_BUTTON_FILEPATH });
 		data_->assets.LoadTexture("Start Button Pressed", { START_BUTTON_PRESSED_FILEPATH });

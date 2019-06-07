@@ -1,6 +1,7 @@
 #include "InteractionsHandler.hpp"
 #include "Enemy.hpp"
 #include "PlayerShip.hpp"
+#include "Boss.hpp"
 
 namespace rstar
 {
@@ -24,10 +25,18 @@ namespace rstar
 			if (ship.bullet_ &&
 				!enemy->IsDestroyed() && ship.bullet_->GetBounds().intersects(enemy->GetBounds()))
 			{
-				enemy->isDestroyed_ = true;
-				enemy->isCharging_ = false;
 				ship.bullet_.reset(nullptr);
-				ship.score_ += pointsForEnemy;
+
+				if (--enemy->lives_ <= 0)
+				{
+					enemy->isDestroyed_ = true;
+					enemy->isCharging_ = false;
+					ship.score_ += pointsForEnemy;
+				}
+				else
+				{
+					enemy->hit_ = true;
+				}
 			}
 
 		}
@@ -55,13 +64,20 @@ namespace rstar
 		{
 			if (!enemy->IsDestroyed() && enemy->GetBounds().intersects(ship.GetBounds()))
 			{
-				enemy->isDestroyed_ = true;
-				enemy->isCharging_ = false;
+				if (--enemy->lives_ <= 0)
+				{
+					enemy->isDestroyed_ = true;
+					enemy->isCharging_ = false;
+				}
+				else
+				{
+					enemy->hit_ = true;
+				}
 				ship.hit_ = true;
 				--ship.lives_;
 			}
 
-			if (enemy->IsOutOfScreen())
+			if (enemy->IsOutOfScreen() && !dynamic_cast<Boss*>(enemy.get()))
 			{
 				enemy->toRemove_ = true;
 				ship.score_ -= pointsForEnemy;
@@ -74,11 +90,11 @@ namespace rstar
 		for (auto &enemy : e.enemies_)
 		{
 			if (!enemy->IsDestroyed()
-				&& e.lvlClockRef_.getElapsedTime().asSeconds() > LVL1_ENEMIES_START_SHOOT_DELAY
+				&& e.lvlClockRef_.getElapsedTime().asSeconds() > ENEMIES_START_SHOOT_DELAY
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
 				&& abs(enemy->GetPosition().x - ship.GetPosition().x) < ENEMIES_WIDTH)
 			{
-				if (Random<float>(0, 100) < chanceToShoot)
+				if (Random<float>(0, 100) <= chanceToShoot)
 				{
 					e.Shoot(sf::Vector2f{ enemy->GetPosition().x - enemy->GetBounds().width / 2.f, enemy->GetPosition().y });
 					e.shotDelayTimeOffset_ = e.lvlClockRef_.getElapsedTime().asSeconds();

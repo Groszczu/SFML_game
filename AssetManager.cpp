@@ -29,11 +29,10 @@ namespace rstar
 		return textures_.at(textureName).at(textureNumber);
 	}
 
-	const std::vector<sf::Texture>& AssetManager::GetTexturesArray(std::string const& texturesName) const
+	const std::vector<sf::Texture>& AssetManager::GetTexturesArray(std::string const& texturesName)
 	{
 		return textures_.at(texturesName);
 	}
-
 
 	void AssetManager::LoadFont(std::string const& fontName, std::string const& filePath)
 	{

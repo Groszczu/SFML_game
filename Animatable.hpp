@@ -9,8 +9,10 @@ namespace rstar
 	public:
 		Animatable(GameDataPtr data, std::vector<sf::Texture> const& texturesInOrder, float frameTime, sf::Clock const& clock);
 
+		void ChangeTextures(std::vector<sf::Texture> const& textures);
+
 	protected:
-		std::vector<sf::Texture> const& textures_;
+		const std::vector<sf::Texture> * textures_;
 		float frameTime_;
 		sf::Clock const& clockRef_;
 
