@@ -13,11 +13,9 @@ namespace rstar
 		data_->assets.LoadTexture("Start Button", { START_BUTTON_FILEPATH });
 		data_->assets.LoadTexture("Start Button Pressed", { START_BUTTON_PRESSED_FILEPATH });
 		
-		// setting sprites
 		background_.setTexture(data_->assets.GetTexture("Splash State Background"));
 		startButton_.setTexture(data_->assets.GetTexture("Start Button"));
 
-		// setting start button size and position
 		startButton_.setScale({ 2.f, 2.f });
 		startButton_.setPosition(WINDOW_WIDTH / 2.f - startButton_.getGlobalBounds().width / 2.f, WINDOW_HEIGHT / 2.15f);
 	}
@@ -34,8 +32,9 @@ namespace rstar
 			}
 		}
 
-		if (data_->input.IsSpriteClicked(startButton_, sf::Mouse::Button::Left, data_->window) 
-			|| sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		if (data_->input.IsSpriteClicked(startButton_, sf::Mouse::Button::Left, data_->window) ||
+			sf::Keyboard::isKeyPressed(sf::Keyboard::Space) ||
+			sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 		{
 			fading_ = true;
 		}

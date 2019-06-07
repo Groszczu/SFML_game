@@ -11,7 +11,7 @@ namespace rstar
 		unsigned enemiesCount, float enemiesMovementSpeed, float enemiesBulletsSpeed,
 		float enemiesChargingSpeed, unsigned enemiesChargingAtOnce, unsigned enemiesLives,
 		sf::Vector2f firstEnemySpawnPosition, float spaceBetweenEnemies, float powerUpsSpawnTime,
-		unsigned lvlCompletionPoints, bool bossLvl)
+		unsigned lvlCompletionPoints)
 		: data_(std::move(data)), backgroundTextures_(data_->assets.GetTexturesArray(backgroundTextureName)),
 		powerUpsSpawnTime_(powerUpsSpawnTime), lvlCompletePoints_(lvlCompletionPoints)
 	{
@@ -19,12 +19,19 @@ namespace rstar
 
 		data_->assets.LoadTexture("Player Ship", { PLAYER_SHIP_FILEPATH });
 		data_->assets.LoadTexture("Hit Player Ship", { HIT_PLAYER_SHIP_FILEPATH });
+
 		data_->assets.LoadTexture("Player Bullet", { PLAYER_BULLET_FILEPATH });
 		data_->assets.LoadTexture("Enemy Bullet", { ENEMY_BULLET_FILEPATH });
+		data_->assets.LoadTexture("Boss Bullet", { BOSS_BULLET_FILEPATH });
+		data_->assets.LoadTexture("Boss Laser", { BOSS_LASER_FILEPATH });
 
 		data_->assets.LoadTexture("Red Enemy", { RED_ENEMY1_FILEPATH, RED_ENEMY2_FILEPATH, RED_ENEMY3_FILEPATH });
 		data_->assets.LoadTexture("Blue Enemy", { BLUE_ENEMY1_FILEPATH, BLUE_ENEMY2_FILEPATH, BLUE_ENEMY3_FILEPATH });
-		data_->assets.LoadTexture("Boss", { BOSS_FILEPATH });
+		data_->assets.LoadTexture("Gold Enemy", { GOLD_ENEMY1_FILEPATH, GOLD_ENEMY2_FILEPATH, GOLD_ENEMY3_FILEPATH });
+
+		data_->assets.LoadTexture("Boss", { BOSS_FILEPATH, BOSS_FILEPATH1, BOSS_FILEPATH2, BOSS_FILEPATH3,
+			BOSS_FILEPATH4, BOSS_FILEPATH5, BOSS_FILEPATH6, BOSS_FILEPATH7, BOSS_FILEPATH8, BOSS_FILEPATH9,
+			BOSS_FILEPATH10, BOSS_FILEPATH11, BOSS_FILEPATH12, BOSS_FILEPATH13, BOSS_FILEPATH14, BOSS_FILEPATH15 });
 
 		data_->assets.LoadTexture("Enemy dst", { ENEMY_DST1_FILEPATH, ENEMY_DST2_FILEPATH, ENEMY_DST3_FILEPATH, ENEMY_DST4_FILEPATH });
 
@@ -45,7 +52,7 @@ namespace rstar
 		enemies_ = std::make_unique<Enemies>(data_,
 			enemiesCount, enemiesMovementSpeed, enemiesBulletsSpeed,
 			enemiesChargingSpeed, enemiesChargingAtOnce, enemiesLives,
-			firstEnemySpawnPosition, spaceBetweenEnemies, lvlClock_, bossLvl);
+			firstEnemySpawnPosition, spaceBetweenEnemies, lvlClock_);
 	}
 
 	void LevelState::HandleInput()
@@ -67,6 +74,18 @@ namespace rstar
 
 		player_->Update();
 		enemies_->Update();
+		if (boss_)
+		{
+			if (boss_->IsToRemove())
+			{
+				boss_.reset(nullptr);
+			}
+			else
+			{
+				boss_->Update();
+			}
+		}
+
 		if (powerUpShip_)
 		{
 			if (powerUpShip_->IsToRemove())
@@ -93,7 +112,7 @@ namespace rstar
 			fading_ = true;
 		}
 
-		if (enemies_->GetEnemiesCount() <= 0 && !powerUpShip_)
+		if (enemies_->GetEnemiesCount() <= 0 && !powerUpShip_ && !boss_)
 		{
 			lvlCompleteTime_ = lvlClock_.getElapsedTime().asSeconds();
 			fading_ = true;
@@ -120,6 +139,7 @@ namespace rstar
 			player_->Draw();
 			enemies_->Draw();
 			if (powerUpShip_) { powerUpShip_->Draw(); }
+			if (boss_) { boss_->Draw(); }
 
 			data_->window.draw(scoreTxt_);
 			data_->window.draw(playerLivesTxt_);

@@ -3,7 +3,6 @@
 #include "Enemy.hpp"
 #include <algorithm>
 #include <utility>
-#include "Boss.hpp"
 
 namespace rstar
 {
@@ -99,10 +98,9 @@ namespace rstar
 			ChangeTextures(data_->assets.GetTexturesArray("Blue Enemy"));
 			break;
 		case 3:
-			ChangeTextures(data_->assets.GetTexturesArray("Boss"));
+			ChangeTextures(data_->assets.GetTexturesArray("Gold Enemy"));
 			break;
 		default:
-			ChangeTextures(data_->assets.GetTexturesArray("Boss"));
 			break;
 		}
 	}
@@ -117,7 +115,7 @@ namespace rstar
 
 	// Start enemies-----------------------------------------------------------------------
 	Enemies::Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed, float bulletsSpeed, float chargingSpeed, unsigned enemiesCharging,
-		unsigned enemiesLives, sf::Vector2f firstEnemyPos, float space, sf::Clock const& lvlClockRef, bool boss)
+		unsigned enemiesLives, sf::Vector2f firstEnemyPos, float space, sf::Clock const& lvlClockRef)
 		: data_(std::move(data)), lvlClockRef_(lvlClockRef), enemiesCount_(enemiesCount), enemiesCharging_(enemiesCharging)
 	{
 		std::generate_n(std::back_inserter(enemies_), enemiesCount,
@@ -135,14 +133,6 @@ namespace rstar
 					ENEMY_ANIMATION_FRAME_TIME, lvlClockRef_);
 			}
 			);
-
-		if (boss)
-		{
-			enemies_.emplace_back(std::make_unique<Boss>(data_, data_->assets.GetTexturesArray("Boss"),
-				sf::Vector2f{ WINDOW_WIDTH / 2.f + 0.9f * ENEMIES_WIDTH, 4*ENEMIES_HEIGHT }, BOSS_LIVES,
-				ENEMY_ANIMATION_FRAME_TIME, lvlClockRef_));
-			++enemiesCount_;
-		}
 
 		MoveDirection = DirectionX::right;
 		MovementSpeed = movementSpeed;
@@ -164,6 +154,16 @@ namespace rstar
 				return enemy->IsToRemove();
 			}), end(enemies_));
 	}
+
+	void Enemies::removeMissedBullets()
+	{
+		bullets_.erase(std::remove_if(begin(bullets_), end(bullets_),
+			[](auto &bullet)
+		{
+			return bullet->IsOutOfScreen();
+		}), end(bullets_));
+	}
+
 
 	void Enemies::Update()
 	{
@@ -190,6 +190,7 @@ namespace rstar
 		}
 
 		removeDestroyedEnemies();
+		removeMissedBullets();
 		reorderEnemies();
 	}
 
@@ -209,7 +210,7 @@ namespace rstar
 	void Enemies::Shoot(sf::Vector2f const& startPosition)
 	{
 		// putting new Bullet object in the bullet_ vector [as new Bullet unique_ptr]
-		bullets_.emplace_back(std::make_unique<Bullet>(data_, startPosition, BulletsSpeed));
+		bullets_.emplace_back(std::make_unique<Bullet>(data_, data_->assets.GetTexture("Enemy Bullet"), startPosition, BulletsSpeed));
 	}
 
 	void Enemies::handleCharging(unsigned int enemiesCharging)

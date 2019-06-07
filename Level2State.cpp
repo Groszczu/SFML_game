@@ -13,7 +13,6 @@ namespace rstar
 			LVL2_POINTS)
 	{
 		player_ = std::make_unique<PlayerShip>(data_, lvlClock_, playerLives, playerScore, playerMovementSpeed, playerBulletsSpeed);
-		powerUpShip_ = nullptr;
 
 		lvlClock_.restart();
 	}

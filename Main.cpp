@@ -3,7 +3,7 @@
 
 int main()
 {
-	rstar::Game game(WINDOW_WIDTH, WINDOW_HEIGHT, "Galaxian");
+	rstar::Game game(rstar::WINDOW_WIDTH, rstar::WINDOW_HEIGHT, "Galaxian");
 
 	return 0;
 }

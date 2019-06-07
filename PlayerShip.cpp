@@ -22,7 +22,8 @@ namespace rstar
 
 	void PlayerShip::Shoot()
 	{
-		bullet_ = std::make_unique<Bullet>(data_, sf::Vector2f{ GetPosition().x + GetBounds().width / 2.f, GetPosition().y }, bulletsSpeed_, true);
+		bullet_ = std::make_unique<Bullet>(data_, data_->assets.GetTexture("Player Bullet"),
+			sf::Vector2f{ GetPosition().x + GetBounds().width / 2.f, GetPosition().y }, bulletsSpeed_, DirectionX::none, DirectionY::up);
 	}
 
 	void PlayerShip::Update()

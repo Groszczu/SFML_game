@@ -2,26 +2,17 @@
 
 namespace rstar
 {
-	BaseBullet::Bullet::Bullet(GameDataPtr data, sf::Vector2f startPosition, float movementSpeed, bool playerBullet)
-		: GameObject(data), movementSpeed_(movementSpeed)
+	BaseBullet::Bullet::Bullet(GameDataPtr data, sf::Texture const& texture, sf::Vector2f startPosition, float movementSpeed, DirectionX directionX, DirectionY directionY)
+		: GameObject(data), movementSpeed_(movementSpeed), directionX_(directionX), directionY_(directionY)
 	{
-		if (playerBullet)
-		{
-			sprite_.setTexture(data_->assets.GetTexture("Player Bullet"));
-			direction_ = DirectionY::up;
-		}
-		else
-		{
-			sprite_.setTexture(data_->assets.GetTexture("Enemy Bullet"));
-			direction_ = DirectionY::down;
-		}
+		sprite_.setTexture(texture);
 		sprite_.setScale(3.f, 3.f);
 		sprite_.setPosition(startPosition);
 	}
 
 	void BaseBullet::Bullet::Update()
 	{
-		sprite_.move({ 0.f, static_cast<int>(direction_) * movementSpeed_ });
+		sprite_.move({ static_cast<int>(directionX_) * movementSpeed_, static_cast<int>(directionY_) * movementSpeed_ });
 	}
 
 	void BaseBullet::Bullet::Draw() const

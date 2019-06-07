@@ -4,6 +4,7 @@
 #include "DEFINITIONS.hpp"
 #include "PlayerShip.hpp"
 #include "PowerUpShip.hpp"
+#include "Boss.hpp"
 
 namespace rstar
 {
@@ -14,7 +15,7 @@ namespace rstar
 			unsigned enemiesCount, float enemiesMovementSpeed, float enemiesBulletsSpeed,
 			float enemiesChargingSpeed, unsigned enemiesChargingAtOnce, unsigned enemiesLives,
 			sf::Vector2f firstEnemySpawnPosition, float spaceBetweenEnemies, float powerUpsSpawnTime,
-			unsigned lvlCompletionPoints, bool bossLvl = false);
+			unsigned lvlCompletionPoints);
 
 		void HandleInput() override = 0;
 		void Update() override = 0;
@@ -50,7 +51,8 @@ namespace rstar
 
 		std::unique_ptr<PlayerShip> player_;
 		std::unique_ptr<Enemies> enemies_;
-		std::unique_ptr<PowerUpShip> powerUpShip_;
+		std::unique_ptr<PowerUpShip> powerUpShip_{ nullptr };
+		std::unique_ptr<Boss> boss_{ nullptr };
 
 		virtual void updateScore();
 		virtual void updateLives();

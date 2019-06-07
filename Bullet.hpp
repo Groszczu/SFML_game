@@ -1,16 +1,11 @@
 #pragma once
 #include "GameObject.hpp"
 #include "Game.hpp"
+#include "DEFINITIONS.hpp"
 
 namespace rstar
 {
-	enum class DirectionY
-	{
-		up = -1,
-		down = 1
-	};
-
-	// class to inherit from
+		// class to inherit from
 	// derived class inherits protected class Bullet as its member
 	// [this allows to reuse Bullet class in many classes]
 	class BaseBullet
@@ -19,14 +14,16 @@ namespace rstar
 		class Bullet : public GameObject
 		{
 		public:
-			Bullet(GameDataPtr data, sf::Vector2f startPosition, float movementSpeed, bool playerBullet = false);
+			Bullet(GameDataPtr data, sf::Texture const&, sf::Vector2f startPosition,
+				float movementSpeed, DirectionX directionX = DirectionX::none, DirectionY directionY = DirectionY::down);
 
 			void Update() override;
 			void Draw() const override;
 
 		private:
 			float movementSpeed_;
-			DirectionY direction_;
+			DirectionX directionX_;
+			DirectionY directionY_;
 		};
 	};
 }
