@@ -3,7 +3,7 @@
 
 namespace rstar
 {
-	class Boss : public Enemy, public BaseBullet
+	class Boss : public Enemy
 	{
 	public:
 		Boss(GameDataPtr data, std::vector<sf::Texture> const& textures, 

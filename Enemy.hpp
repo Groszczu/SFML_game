@@ -6,7 +6,7 @@
 
 namespace rstar
 {
-		class Enemy : public Animatable
+	class Enemy : public Animatable
 	{
 	public:
 		Enemy(GameDataPtr data, std::vector<sf::Texture> const& textures, sf::Vector2f startPosition, unsigned lives,
@@ -40,7 +40,7 @@ namespace rstar
 		virtual void handleMovement();
 	};
 
-	class Enemies : public BaseBullet
+	class Enemies
 	{
 	public:
 		Enemies(GameDataPtr data, unsigned enemiesCount, float movementSpeed,

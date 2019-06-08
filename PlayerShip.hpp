@@ -7,7 +7,7 @@
 namespace rstar
 {
 	class Enemies;
-	class PlayerShip final : public GameObject, public BaseBullet
+	class PlayerShip final : public GameObject
 	{
 	public:
 		PlayerShip(GameDataPtr data, sf::Clock &clockRef);
