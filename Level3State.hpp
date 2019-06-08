@@ -1,10 +1,9 @@
 #pragma once
 #include "LevelState.hpp"
-#include "Boss.hpp"
 
 namespace rstar
 {
-	class Level3State : public LevelState
+	class Level3State final : public LevelState
 	{
 	public:
 		Level3State(GameDataPtr data, unsigned playerLives, int playerScore, float playerMovementSpeed, float playerBulletsSpeed);

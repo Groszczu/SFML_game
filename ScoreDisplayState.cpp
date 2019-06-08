@@ -52,18 +52,18 @@ namespace rstar
 			case sf::Event::TextEntered:
 				if (!nameEntered_)
 				{
-					if (ev.text.unicode == 13 && !playerNick_.empty()) // ENTER Key pressed
+					if (InputManager::IsEnterKey(ev.text.unicode) && !playerNick_.empty())
 					{
 						nameEntered_ = true;
 					}
-					else if (ev.text.unicode == 8) // BS Key pressed
+					else if (InputManager::IsBackspaceKey(ev.text.unicode))
 					{
 						if (!playerNick_.empty())
 						{
 							playerNick_.pop_back();
 						}
 					}
-					else if (ev.text.unicode >= 65 && ev.text.unicode <= 122)
+					else if (InputManager::IsAlphaCharacter(ev.text.unicode))
 					{
 						if (playerNick_.length() < PLAYER_NICK_MAX_LENGTH)
 						{
@@ -71,7 +71,7 @@ namespace rstar
 						}
 					}
 				}
-				else if (scoreCalculated_ && ev.text.unicode == 13)
+				else if (scoreCalculated_ && InputManager::IsEnterKey(ev.text.unicode))
 				{
 					fading_ = true;
 				}

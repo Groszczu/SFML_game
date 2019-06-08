@@ -7,12 +7,14 @@ namespace rstar
 {
 	Level2State::Level2State(GameDataPtr data, unsigned playerLives, int playerScore, float playerMovementSpeed, float playerBulletsSpeed)
 		: LevelState(data, "Level Background",
-			LVL2_ENEMIES_COUNT, LVL2_ENEMIES_MOVEMENT_SPEED, LVL2_ENEMIES_BULLETS_SPEED,
-			LVL2_ENEMIES_CHARGING_SPEED, LVL2_ENEMIES_CHARGING_AT_ONCE, LVL2_ENEMIES_LIVES,
-			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL2_SPACE_BETWEEN_ENEMIES, LVL2_POWERUPS_SPAWN_TIME,
-			LVL2_POINTS)
+			LVL2_POWERUPS_SPAWN_TIME, LVL2_POINTS)
 	{
 		player_ = std::make_unique<PlayerShip>(data_, lvlClock_, playerLives, playerScore, playerMovementSpeed, playerBulletsSpeed);
+
+		enemies_ = std::make_unique<Enemies>(data_,
+			LVL2_ENEMIES_COUNT, LVL2_ENEMIES_MOVEMENT_SPEED, LVL2_ENEMIES_BULLETS_SPEED,
+			LVL2_ENEMIES_CHARGING_SPEED, LVL2_ENEMIES_CHARGING_AT_ONCE, LVL2_ENEMIES_LIVES,
+			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL2_SPACE_BETWEEN_ENEMIES, lvlClock_);
 
 		lvlClock_.restart();
 	}

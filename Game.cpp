@@ -15,7 +15,7 @@ namespace rstar
 		data_->window.setFramerateLimit(60);
 		while (data_->window.isOpen())
 		{
-			data_->stateMachine.UpdatingStatesStack();
+			data_->stateMachine.UpdateStatesStack();
 
 			data_->stateMachine.GetActiveState()->HandleInput();
 			data_->stateMachine.GetActiveState()->Update();

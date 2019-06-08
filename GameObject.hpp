@@ -27,7 +27,7 @@ namespace rstar
 		bool IsOutOfScreen() const;
 
 	protected:
-		sf::Sprite sprite_;
 		GameDataPtr data_;
+		sf::Sprite sprite_;
 	};
 }

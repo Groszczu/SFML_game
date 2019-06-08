@@ -23,7 +23,7 @@ namespace rstar
 	}
 
 
-	void StateMachine::UpdatingStatesStack()
+	void StateMachine::UpdateStatesStack()
 	{
 		if (removing_)
 		{

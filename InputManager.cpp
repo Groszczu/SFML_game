@@ -1,6 +1,5 @@
 #include "InputManager.hpp"
 #include "Enemy.hpp"
-#include <random>
 
 namespace rstar
 {
@@ -26,5 +25,18 @@ namespace rstar
 	sf::Vector2i InputManager::GetMousePosition(sf::RenderWindow const &window) const
 	{
 		return sf::Mouse::getPosition(window);
+	}
+
+	bool InputManager::IsEnterKey(sf::Uint32 keyCode)
+	{
+		return keyCode == 13;
+	}
+	bool InputManager::IsBackspaceKey(sf::Uint32 keyCode)
+	{
+		return keyCode == 8;
+	}
+	bool InputManager::IsAlphaCharacter(sf::Uint32 keyCode)
+	{
+		return keyCode >= 65 && keyCode <= 122;
 	}
 }

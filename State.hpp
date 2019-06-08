@@ -18,10 +18,15 @@ namespace rstar
 		//pure virtual function
 		virtual void Draw() = 0;
 
-		// static function that smoothly turns screen to the dark
-		static void Fading(float time, sf::RenderWindow &window);
 
-		// static function that smoothly makes screen visible again
-		static void FadingAway(float time, sf::RenderWindow &window, sf::Sprite const& back);
+	protected:
+		bool initial_{ true };
+		bool fading_{ false };
+
+		// function that smoothly turns screen to the dark
+		static void Fading(float frameTime, sf::RenderWindow &window);
+
+		// function that smoothly makes screen visible again
+		static void FadingAway(float frameTime, sf::RenderWindow &window, sf::Sprite const& background);
 	};
 }

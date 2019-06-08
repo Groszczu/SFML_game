@@ -23,7 +23,7 @@ namespace rstar
 	class Game
 	{
 	public:
-		Game(int width, int height, std::string const &title);
+		Game(int width, int height, std::string const& title);
 
 	private:
 		GameDataPtr data_ = std::make_shared<GameData>();

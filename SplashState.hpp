@@ -19,8 +19,6 @@ namespace rstar
 		sf::Sprite background_;
 		sf::Sprite startButton_;
 
-		bool initial_{ true };
-		bool fading_{ false };
 		bool mouseOverButton_{ false };
 
 		void handleButtonAnimation();

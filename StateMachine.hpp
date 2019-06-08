@@ -12,11 +12,9 @@ namespace rstar
 	class StateMachine
 	{
 	public:
-		StateMachine() = default;
-
 		void SetState(StatePtr newState, bool isReplacing = true);
 		void RemoveActiveState();
-		void UpdatingStatesStack();
+		void UpdateStatesStack();
 
 		StatePtr& GetActiveState();
 

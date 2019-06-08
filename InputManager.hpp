@@ -11,6 +11,10 @@ namespace rstar
 		bool IsSpriteClicked(sf::Sprite const& object, sf::Mouse::Button const& button, sf::RenderWindow const& window) const;
 		bool IsMouseOverSprite(sf::Sprite const& object, sf::RenderWindow const& window) const;
 		sf::Vector2i GetMousePosition(sf::RenderWindow const& window) const;
+
+		static bool IsEnterKey(sf::Uint32 keyCode);
+		static bool IsBackspaceKey(sf::Uint32 keyCode);
+		static bool IsAlphaCharacter(sf::Uint32 keyCode);
 	};
 
 	template<typename T>

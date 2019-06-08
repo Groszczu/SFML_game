@@ -7,10 +7,7 @@
 
 namespace rstar
 {
-	LevelState::LevelState(GameDataPtr data, std::string const& backgroundTextureName,
-		unsigned enemiesCount, float enemiesMovementSpeed, float enemiesBulletsSpeed,
-		float enemiesChargingSpeed, unsigned enemiesChargingAtOnce, unsigned enemiesLives,
-		sf::Vector2f firstEnemySpawnPosition, float spaceBetweenEnemies, float powerUpsSpawnTime,
+	LevelState::LevelState(GameDataPtr data, std::string const& backgroundTextureName, float powerUpsSpawnTime,
 		unsigned lvlCompletionPoints)
 		: data_(std::move(data)), backgroundTextures_(data_->assets.GetTexturesArray(backgroundTextureName)),
 		powerUpsSpawnTime_(powerUpsSpawnTime), lvlCompletePoints_(lvlCompletionPoints)
@@ -48,11 +45,6 @@ namespace rstar
 		playerLivesTxt_.setCharacterSize(IN_GAME_FONT_SIZE);
 		playerLivesTxt_.setPosition(WINDOW_WIDTH - 10 * IN_GAME_FONT_SIZE, WINDOW_HEIGHT - IN_GAME_FONT_SIZE);
 		playerLivesTxt_.setString("LIVES: " + std::to_string(playerLives_));
-
-		enemies_ = std::make_unique<Enemies>(data_,
-			enemiesCount, enemiesMovementSpeed, enemiesBulletsSpeed,
-			enemiesChargingSpeed, enemiesChargingAtOnce, enemiesLives,
-			firstEnemySpawnPosition, spaceBetweenEnemies, lvlClock_);
 	}
 
 	void LevelState::HandleInput()

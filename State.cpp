@@ -4,7 +4,7 @@
 
 namespace rstar
 {
-	void State::Fading(float time, sf::RenderWindow &window)
+	void State::Fading(float frameTime, sf::RenderWindow &window)
 	{
 		sf::Clock clock;
 		sf::Texture texture;
@@ -15,7 +15,7 @@ namespace rstar
 
 		while (blacks.size() != FINAL_NUMBER_OF_SHADOWS)
 		{
-			if (clock.getElapsedTime().asSeconds() > time)
+			if (clock.getElapsedTime().asSeconds() > frameTime)
 			{
 				blacks.emplace_back(sf::Sprite{ texture });
 
@@ -29,7 +29,7 @@ namespace rstar
 		}
 	}
 
-	void State::FadingAway(float time, sf::RenderWindow &window, sf::Sprite const& back) 
+	void State::FadingAway(float frameTime, sf::RenderWindow &window, sf::Sprite const& background) 
 	{
 		sf::Clock clock;
 		sf::Texture texture;
@@ -48,15 +48,15 @@ namespace rstar
 		}
 		window.display();
 		window.clear();
-		window.draw(back);
+		window.draw(background);
 
 		while (!blacks.empty())
 		{
-			if (clock.getElapsedTime().asSeconds() > time)
+			if (clock.getElapsedTime().asSeconds() > frameTime)
 			{
 				blacks.pop_back();
 				window.clear();
-				window.draw(back);
+				window.draw(background);
 				for (auto &sprite : blacks)
 				{
 					window.draw(sprite);

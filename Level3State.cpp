@@ -7,13 +7,15 @@ namespace rstar
 {
 	Level3State::Level3State(GameDataPtr data, unsigned playerLives, int playerScore, float playerMovementSpeed, float playerBulletsSpeed)
 		: LevelState(data, "Level Background",
-			LVL3_ENEMIES_COUNT, LVL3_ENEMIES_MOVEMENT_SPEED, LVL3_ENEMIES_BULLETS_SPEED,
-			LVL3_ENEMIES_CHARGING_SPEED, LVL3_ENEMIES_CHARGING_AT_ONCE, LVL3_ENEMIES_LIVES,
-			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL3_SPACE_BETWEEN_ENEMIES, LVL3_POWERUPS_SPAWN_TIME,
-			LVL3_POINTS)
+			LVL3_POWERUPS_SPAWN_TIME, LVL3_POINTS)
 	{
 		player_ = std::make_unique<PlayerShip>(data_, lvlClock_, playerLives, playerScore, playerMovementSpeed, playerBulletsSpeed);
-		powerUpShip_ = nullptr;
+
+		enemies_ = std::make_unique<Enemies>(data_,
+			LVL3_ENEMIES_COUNT, LVL3_ENEMIES_MOVEMENT_SPEED, LVL3_ENEMIES_BULLETS_SPEED,
+			LVL3_ENEMIES_CHARGING_SPEED, LVL3_ENEMIES_CHARGING_AT_ONCE, LVL3_ENEMIES_LIVES,
+			sf::Vector2f{ ENEMIES_SIDE_MARGIN, ENEMIES_TOP_MARGIN }, LVL3_SPACE_BETWEEN_ENEMIES, lvlClock_);
+
 		boss_ = std::make_unique<Boss>(data_, data_->assets.GetTexturesArray("Boss"),
 			BOSS_LIVES, BOSS_MOVEMENT_SPEED, BOSS_CHARGING_SPEED, BOSS_BULLETS_SPEED,
 			sf::Vector2f{ WINDOW_WIDTH / 2.f + 18.f, 2 * BOSS_HEIGHT }, ENEMY_ANIMATION_FRAME_TIME, lvlClock_);

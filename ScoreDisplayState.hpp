@@ -15,8 +15,8 @@ namespace rstar
 
 	private:
 		GameDataPtr data_;
-		const int playerScore_;
-		std::string fileName_;
+		int const playerScore_;
+		std::string const fileName_;
 		
 		std::string playerNick_{};
 
@@ -31,8 +31,6 @@ namespace rstar
 
 		sf::Clock animationClock_;
 
-		bool initial_{ true };
-		bool fading_{ false };
 		bool nameEntered_{ false };
 		bool scoreCalculated_{ false };
 

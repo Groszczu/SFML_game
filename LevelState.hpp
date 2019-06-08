@@ -10,15 +10,12 @@ namespace rstar
 {
 	class LevelState : public State
 	{
-	public:
-		LevelState(GameDataPtr data, std::string const& backgroundTextureName, 
-			unsigned enemiesCount, float enemiesMovementSpeed, float enemiesBulletsSpeed,
-			float enemiesChargingSpeed, unsigned enemiesChargingAtOnce, unsigned enemiesLives,
-			sf::Vector2f firstEnemySpawnPosition, float spaceBetweenEnemies, float powerUpsSpawnTime,
+	protected:
+		LevelState(GameDataPtr data, std::string const& backgroundTextureName, float powerUpsSpawnTime,
 			unsigned lvlCompletionPoints);
 
-		void HandleInput() override = 0;
-		void Update() override = 0;
+		void HandleInput() override;
+		void Update() override;
 		void Draw() override;
 
 	protected:
@@ -40,17 +37,13 @@ namespace rstar
 		float lvlCompleteTime_{ 0.f };
 		unsigned lvlCompletePoints_;
 
-		// bool variables to manage changing screens
-		bool initial_{ true };
-		bool fading_{ false };
-
 		// it's value is equal to index number of background image displayed currently (animating background) 
 		unsigned backgroundCurrentTexture_{ 0 };
 		float backgroundAnimationTimeOffset_{ 0.f };
 		void backgroundAnimation();
 
-		std::unique_ptr<PlayerShip> player_;
-		std::unique_ptr<Enemies> enemies_;
+		std::unique_ptr<PlayerShip> player_{ nullptr };
+		std::unique_ptr<Enemies> enemies_{ nullptr };
 		std::unique_ptr<PowerUpShip> powerUpShip_{ nullptr };
 		std::unique_ptr<Boss> boss_{ nullptr };
 
