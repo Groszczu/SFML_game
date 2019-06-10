@@ -42,10 +42,10 @@ namespace rstar
 		float backgroundAnimationTimeOffset_{ 0.f };
 		void backgroundAnimation();
 
-		std::unique_ptr<PlayerShip> player_{ nullptr };
-		std::unique_ptr<Enemies> enemies_{ nullptr };
-		std::unique_ptr<PowerUpShip> powerUpShip_{ nullptr };
-		std::unique_ptr<Boss> boss_{ nullptr };
+		std::unique_ptr<PlayerShip> player_;
+		std::unique_ptr<Enemies> enemies_;
+		std::unique_ptr<PowerUpShip> powerUpShip_;
+		std::unique_ptr<Boss> boss_;
 
 		virtual void updateScore();
 		virtual void updateLives();
