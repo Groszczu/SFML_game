@@ -10,8 +10,8 @@ namespace rstar
 	class PlayerShip final : public GameObject
 	{
 	public:
-		PlayerShip(GameDataPtr data, sf::Clock &clockRef);
-		PlayerShip(GameDataPtr data, sf::Clock &clockRef, int lives, int score, float movementSpeed, float bulletsSpeed);
+		PlayerShip(GameDataPtr data, sf::Clock const& clockRef);
+		PlayerShip(GameDataPtr data, sf::Clock const& clockRef, int lives, int score, float movementSpeed, float bulletsSpeed);
 		
 		void Shoot();
 		int GetScore() const { return score_; }
@@ -29,7 +29,7 @@ namespace rstar
 		friend class InteractionsHandler;
 		
 	private:
-		sf::Clock &clockRef_;
+		sf::Clock const& clockRef_;
 
 		unsigned lives_{ PLAYER_LIVES };
 		int score_{ 0 };

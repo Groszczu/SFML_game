@@ -3,7 +3,7 @@
 
 namespace rstar
 {
-	PlayerShip::PlayerShip(GameDataPtr data, sf::Clock &clockRef)
+	PlayerShip::PlayerShip(GameDataPtr data, sf::Clock const& clockRef)
 		: GameObject(data), clockRef_(clockRef)
 	{
 		sprite_.setTexture(data_->assets.GetTexture("Player Ship"));
@@ -11,7 +11,7 @@ namespace rstar
 		sprite_.setPosition(static_cast<float>(WINDOW_WIDTH) / 2.f - GetBounds().width / 2.f, static_cast<float>(WINDOW_HEIGHT) - GetBounds().height * 2.f);
 	}
 
-	PlayerShip::PlayerShip(GameDataPtr data, sf::Clock &clockRef, int lives, int score, float movementSpeed, float bulletsSpeed)
+	PlayerShip::PlayerShip(GameDataPtr data, sf::Clock const& clockRef, int lives, int score, float movementSpeed, float bulletsSpeed)
 		: GameObject(data), clockRef_(clockRef), lives_(lives), score_(score), movementSpeed_(movementSpeed), bulletsSpeed_(bulletsSpeed)
 	{
 		sprite_.setTexture(data_->assets.GetTexture("Player Ship"));

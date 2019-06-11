@@ -22,7 +22,7 @@ namespace rstar
 		sf::RectangleShape hpBar_;
 
 		float chargingSpeed_;
-		unsigned chargingCounter_{ BOSS_CHARGING_NUMBER };
+		unsigned chargesCounter_{ BOSS_CHARGING_NUMBER };
 		float chargeTimeOffset_{ 0.f };
 
 		float positionOffset_{ 0.f };

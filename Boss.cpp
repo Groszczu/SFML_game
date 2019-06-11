@@ -63,11 +63,11 @@ namespace rstar
 
 		sf::Vector2f moveVector;
 
-		if (GetPosition().x > WINDOW_WIDTH - GetBounds().width)
+		if (GetPosition().x > WINDOW_WIDTH)
 		{
 			moveDirection_ = DirectionX::left;
 		}
-		if (GetPosition().x - 2*GetBounds().width < 0)
+		if (GetPosition().x - GetBounds().width < 0)
 		{
 			moveDirection_ = DirectionX::right;
 		}
@@ -81,11 +81,11 @@ namespace rstar
 			moveVector = { static_cast<int>(moveDirection_) * movementSpeed_, chargingSpeed_ };
 			if (abs(GetPosition().y - BOSS_MOVE_FORWARD_PER_CHARGE - positionOffset_) <= 1)
 			{
-				if(chargingCounter_-- == 0)
+				if(chargesCounter_-- == 0)
 				{
 					isCharging_ = false;
 					positionOffset_ = 0.f;
-					chargingCounter_ = BOSS_CHARGING_NUMBER;
+					chargesCounter_ = BOSS_CHARGING_NUMBER;
 				}
 			}
 		}

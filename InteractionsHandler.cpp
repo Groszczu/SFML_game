@@ -158,7 +158,7 @@ namespace rstar
 			if (!enemy->IsDestroyed()
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() > ENEMIES_START_SHOOT_DELAY
 				&& e.lvlClockRef_.getElapsedTime().asSeconds() - e.shotDelayTimeOffset_ > ENEMIES_SHOT_DELAY
-				&& abs(enemy->GetPosition().x - ship.GetPosition().x) < ENEMIES_WIDTH)
+				&& abs(enemy->GetPosition().x - enemy->GetBounds().width - ship.GetPosition().x) < ENEMIES_WIDTH)
 			{
 				if (Random<float>(0, 100) <= chanceToShoot)
 				{
