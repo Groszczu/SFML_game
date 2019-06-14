@@ -57,6 +57,11 @@ namespace rstar
 			{
 				data_->window.close();
 			}
+
+			if (ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape)
+			{
+				data_->window.close();
+			}
 		}
 	}
 
@@ -104,7 +109,7 @@ namespace rstar
 			fading_ = true;
 		}
 
-		if (enemies_->GetEnemiesCount() <= 0 && !powerUpShip_ && !boss_)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Equal) || enemies_->GetEnemiesCount() <= 0 && !powerUpShip_ && !boss_)
 		{
 			lvlCompleteTime_ = lvlClock_.getElapsedTime().asSeconds();
 			fading_ = true;

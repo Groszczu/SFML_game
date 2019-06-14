@@ -30,6 +30,11 @@ namespace rstar
 			{
 				data_->window.close();
 			}
+
+			if (ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape)
+			{
+				data_->window.close();
+			}
 		}
 
 		if (data_->input.IsSpriteClicked(startButton_, sf::Mouse::Button::Left, data_->window) ||

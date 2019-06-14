@@ -49,6 +49,12 @@ namespace rstar
 			case sf::Event::Closed:
 				data_->window.close();
 				break;
+			case sf::Event::KeyPressed:
+				if (ev.key.code == sf::Keyboard::Escape)
+				{
+					data_->window.close();
+				}
+				break;
 			case sf::Event::TextEntered:
 				if (!nameEntered_)
 				{

@@ -61,8 +61,6 @@ namespace rstar
 			sprite_.setPosition(GetPosition().x, -GetBounds().height);
 		}
 
-		sf::Vector2f moveVector;
-
 		if (GetPosition().x > WINDOW_WIDTH)
 		{
 			moveDirection_ = DirectionX::left;
@@ -72,6 +70,7 @@ namespace rstar
 			moveDirection_ = DirectionX::right;
 		}
 
+		sf::Vector2f moveVector;
 		if (!isCharging_)
 		{
 			moveVector = { static_cast<int>(moveDirection_) * movementSpeed_, 0 };

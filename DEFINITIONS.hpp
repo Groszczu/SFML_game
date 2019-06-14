@@ -56,7 +56,7 @@ namespace rstar
 	constexpr unsigned LVL1_ENEMIES_LIVES{ 1 };
 	constexpr unsigned LVL1_POINTS_FOR_ENEMY{ 30 };
 	constexpr unsigned LVL1_ENEMIES_CHARGING_AT_ONCE{ 3 };
-	constexpr unsigned LVL1_POINTS{ 14'400 };
+	constexpr unsigned LVL1_POINTS{ LVL1_ENEMIES_COUNT * LVL1_POINTS_FOR_ENEMY * 10 };
 	constexpr float LVL1_ENEMIES_MOVEMENT_SPEED{ 1.2f };
 	constexpr float LVL1_ENEMIES_BULLETS_SPEED{ 4.f };
 	constexpr float LVL1_ENEMIES_CHANCE_TO_SHOOT{ 50.f };
@@ -67,7 +67,7 @@ namespace rstar
 	constexpr unsigned LVL2_ENEMIES_LIVES{ 2 };
 	constexpr unsigned LVL2_POINTS_FOR_ENEMY{ 45 };
 	constexpr unsigned LVL2_ENEMIES_CHARGING_AT_ONCE{ 4 };
-	constexpr unsigned LVL2_POINTS{ 20'400 };
+	constexpr unsigned LVL2_POINTS{ LVL2_ENEMIES_COUNT * LVL2_POINTS_FOR_ENEMY * 12 };
 	constexpr float LVL2_ENEMIES_MOVEMENT_SPEED{ 1.0f };
 	constexpr float LVL2_ENEMIES_BULLETS_SPEED{ 5.f };
 	constexpr float LVL2_ENEMIES_CHANCE_TO_SHOOT{ 75.f };
@@ -77,17 +77,17 @@ namespace rstar
 	constexpr unsigned LVL3_ENEMIES_COUNT{ 6 };
 	constexpr unsigned LVL3_ENEMIES_LIVES{ 3 };
 	constexpr unsigned LVL3_POINTS_FOR_ENEMY{ 150 };
+	constexpr unsigned LVL3_POINTS_FOR_BOSS{ 500 };
 	constexpr unsigned LVL3_ENEMIES_CHARGING_AT_ONCE{ 0 };
-	constexpr unsigned LVL3_POINTS{ 60'400 };
+	constexpr unsigned LVL3_POINTS{ LVL3_ENEMIES_COUNT * LVL3_POINTS_FOR_ENEMY * 15 + BOSS_LIVES * LVL3_POINTS_FOR_BOSS * 2 };
 	constexpr float LVL3_ENEMIES_MOVEMENT_SPEED{ 1.0f };
 	constexpr float LVL3_ENEMIES_BULLETS_SPEED{ 6.f };
 	constexpr float LVL3_ENEMIES_CHANCE_TO_SHOOT{ 100.f };
 	constexpr float LVL3_ENEMIES_CHARGING_SPEED{ 3.5f };
 	constexpr float LVL3_SPACE_BETWEEN_ENEMIES{ 50.f };
-	constexpr unsigned LVL3_POINTS_FOR_BOSS{ 500 };
 
 	constexpr unsigned MAX_POINTS{
-		LVL1_ENEMIES_COUNT*LVL1_POINTS_FOR_ENEMY + LVL1_POINTS +
+		LVL1_ENEMIES_COUNT * LVL1_POINTS_FOR_ENEMY + LVL1_POINTS +
 		LVL2_ENEMIES_COUNT * LVL2_POINTS_FOR_ENEMY + LVL2_POINTS +
 		LVL3_ENEMIES_COUNT * LVL3_POINTS_FOR_ENEMY + LVL3_POINTS };
 	constexpr int SCORE_TABLE_MAX_SIZE{ 10 };
