@@ -7,3 +7,4 @@
 
 # In-game screenshots
 ![game_ss1](/Pictures/galaxian1.png)
+![game_ss2](/Pictures/galaxian_boss.png)
