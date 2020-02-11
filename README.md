@@ -2,7 +2,7 @@
 
 * Project made in the second semester of computer science
 * Game created in C++ using SFML library
-* Based on Space Inviders
+* Based on Space Invaders
 * Textures used are from Galaxian Game
 
 # In-game screenshots
