@@ -1,4 +1,4 @@
-# SF_game
+# SFML Space Invaders game
 
 * Project made in the second semester of computer science
 * Game created in C++ using SFML library
